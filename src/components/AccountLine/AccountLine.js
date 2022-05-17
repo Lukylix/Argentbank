@@ -2,10 +2,7 @@ import "./AccountLine.css";
 
 export default function AccountLine({ title, amount, description }) {
   // Format the amount to have 2 decimal and a comma every 3 digits
-  const amountFormated = amount
-    .toFixed(2)
-    .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const amountFormated = amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return (
     <section className="account">
       <div className="account-content-wrapper">
