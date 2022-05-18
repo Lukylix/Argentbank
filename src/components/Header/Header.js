@@ -45,7 +45,7 @@ export default function Header() {
     localStorage.removeItem("token");
     dispatch(setToken(null));
     dispatch(setUser({}));
-    navigate("/sign-in");
+    navigate("/");
   };
 
   return (
