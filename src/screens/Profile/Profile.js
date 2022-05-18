@@ -1,14 +1,16 @@
 import AccountLine from "../../components/AccountLine";
+import { useSelector } from "react-redux";
 import "./Profile.css";
 
 export default function UserProfile() {
+  const { firstName, lastName } = useSelector((state) => state.user);
   return (
     <main className="main bg-dark">
       <div className="header">
         <h1>
           Welcome back
           <br />
-          Tony Jarvis!
+          {firstName} {lastName}!
         </h1>
         <button className="edit-button">Edit Name</button>
       </div>

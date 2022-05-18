@@ -18,5 +18,25 @@ async function login(email, password) {
   }
 }
 
-const api = { login };
+async function getUserProfile(token) {
+  try {
+    const res = await axios.post(
+      `http://${host}:${port}/api/v1/user/profile`,
+      {},
+      {
+        headers: {
+          authorization: "Bearer " + token,
+        },
+      }
+    );
+    return { data: res.data, error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: { message: error?.response?.data?.message || error.message, status: error?.response?.status },
+    };
+  }
+}
+
+const api = { login, getUserProfile };
 export default api;

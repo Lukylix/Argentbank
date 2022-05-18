@@ -1,15 +1,53 @@
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { setAlert } from "../../utils/alert";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../utils/redux/userSlice";
+import { setToken } from "../../utils/redux/tokenSlice";
+import api from "../../utils/api";
 import argentBankLogo from "../../assets/argentBankLogo.png";
 import "./Header.css";
 
 export default function Header() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
+  const tokenLocalSorage = localStorage.getItem("token");
+  const tokenRedux = useSelector((state) => state.token);
+  const firstName = useSelector((state) => state.user?.firstName);
+
+  useEffect(() => {
+    if (!tokenRedux && !tokenLocalSorage) return navigate("/sign-in");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(
+    () => {
+      (async () => {
+        if (!tokenRedux && !tokenLocalSorage) return;
+        if (!tokenRedux && tokenLocalSorage) return dispatch(setToken(tokenLocalSorage));
+        const { data, error } = await api.getUserProfile(tokenRedux || tokenLocalSorage);
+        if (error?.status === 400) return setAlert("Invalid session token.", "warning")(dispatch);
+        if (error?.status === 401) {
+          setAlert("Session expired.", "warning")(dispatch);
+          logout();
+          return;
+        }
+        if (error?.status === 500) return setAlert("Internal server error.", "danger")(dispatch);
+        if (error) return setAlert("Something went wrong.", "warning")(dispatch);
+        if (data?.body) dispatch(setUser(data.body));
+      })();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tokenRedux]
+  );
 
   const logout = () => {
     localStorage.removeItem("token");
+    dispatch(setToken(null));
+    dispatch(setUser({}));
     navigate("/sign-in");
   };
+
   return (
     <nav className="main-nav">
       <Link className="main-nav-logo" to="/">
@@ -17,10 +55,10 @@ export default function Header() {
         <h1 className="sr-only">Argent Bank</h1>
       </Link>
       <div>
-        {token ? (
+        {tokenRedux ? (
           <>
             <Link className="main-nav-item" to="/profile">
-              <i className="fa fa-user-circle"></i> Tony
+              <i className="fa fa-user-circle"></i> {firstName}
             </Link>
             <button className="main-nav-item" onClick={logout}>
               <i className="fa fa-sign-out"></i> Sign Out

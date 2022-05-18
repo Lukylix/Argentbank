@@ -4,6 +4,7 @@ import api from "../../utils/api";
 import "./SignIn.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import { setToken } from "../../utils/redux/tokenSlice";
 
 export default function SignIn() {
   const dispatch = useDispatch();
@@ -17,7 +18,8 @@ export default function SignIn() {
 
   useEffect(() => {
     if (localStorage.getItem("token")) navigate("/profile");
-  }, [navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,6 +38,7 @@ export default function SignIn() {
     if (!rememberMe) localStorage.removeItem("email");
     if (data?.body?.token) {
       localStorage.setItem("token", data.body.token);
+      dispatch(setToken(data.body.token));
       navigate("/profile");
     }
   };
