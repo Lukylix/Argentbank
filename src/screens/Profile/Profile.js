@@ -21,13 +21,13 @@ export default function UserProfile() {
       }
     }
     let { firstName: formFirstName, lastName: formLastName } = formData;
-    if (!formFirstName && !formLastName) return setAlert("Please fill at least one field.", "warning")(dispatch);
+    if (!formFirstName && !formLastName) return dispatch(setAlert("Please fill at least one field.", "warning"));
     if (!formFirstName) formFirstName = firstName;
     if (!formLastName) formLastName = lastName;
     const { data, error } = await api.updateUserProfile(formFirstName, formLastName, token);
-    if (error?.status === 400) return setAlert("Invalid token.", "warning")(dispatch);
-    if (error?.status === 500) return setAlert("Internal server error.", "danger")(dispatch);
-    if (error) return setAlert("Something went wrong.", "warning")(dispatch);
+    if (error?.status === 400) return dispatch(setAlert("Invalid token.", "warning"));
+    if (error?.status === 500) return dispatch(setAlert("Internal server error.", "danger"));
+    if (error) return dispatch(setAlert("Something went wrong.", "warning"));
     if (data?.body) dispatch(setUserNames({ firstName: data.body.firstName, lastName: data.body.lastName }));
     setDisplayForm(false);
   };

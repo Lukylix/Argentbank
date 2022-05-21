@@ -1,4 +1,5 @@
 import { addAlert, removeAlert } from "./redux/alertSlice";
+// curried function (thunk redux)
 export const setAlert =
   (message, alertType, time = 4000) =>
   (dispatch) => {

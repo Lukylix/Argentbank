@@ -31,9 +31,9 @@ export default function SignIn() {
     }
     const { username: email, password, rememberMe } = formData;
     const { data, error } = await api.login(email, password);
-    if (error?.status === 400) return setAlert("Invalid credentials.", "warning")(dispatch);
-    if (error?.status === 500) return setAlert("Internal server error.", "danger")(dispatch);
-    if (error) return setAlert("Something went wrong.", "warning")(dispatch);
+    if (error?.status === 400) return dispatch(setAlert("Invalid credentials.", "warning"));
+    if (error?.status === 500) return dispatch(setAlert("Internal server error.", "danger"));
+    if (error) return dispatch(setAlert("Something went wrong.", "warning"));
     if (rememberMe && email) localStorage.setItem("email", email);
     if (!rememberMe) localStorage.removeItem("email");
     if (data?.body?.token) {

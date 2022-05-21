@@ -26,14 +26,13 @@ export default function Header() {
         if (!tokenRedux && !tokenLocalSorage) return;
         if (!tokenRedux && tokenLocalSorage) return dispatch(setToken(tokenLocalSorage));
         const { data, error } = await api.getUserProfile(tokenRedux || tokenLocalSorage);
-        if (error?.status === 400) return setAlert("Invalid session token.", "warning")(dispatch);
-        if (error?.status === 401) {
-          setAlert("Session expired.", "warning")(dispatch);
+        if (error?.status === 400 || error?.status === 401) {
+          dispatch(setAlert("Session expired.", "warning"));
           logout();
           return;
         }
-        if (error?.status === 500) return setAlert("Internal server error.", "danger")(dispatch);
-        if (error) return setAlert("Something went wrong.", "warning")(dispatch);
+        if (error?.status === 500) return dispatch(setAlert("Internal server error.", "danger"));
+        if (error) return dispatch(setAlert("Something went wrong.", "warning"));
         if (data?.body) dispatch(setUser(data.body));
       })();
     },
