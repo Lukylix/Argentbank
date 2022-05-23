@@ -1,7 +1,8 @@
 import AccountLine from "../../components/AccountLine";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserNames } from "../../utils/redux/userSlice";
-import { useState } from "react";
+import { setAccounts } from "../../utils/redux/accountsSlice";
+import { useEffect, useState } from "react";
 import { setAlert } from "../../utils/alert";
 import api from "../../utils/api";
 import "./Profile.css";
@@ -9,6 +10,7 @@ import "./Profile.css";
 export default function UserProfile() {
   const { firstName, lastName } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
+  const accounts = useSelector((state) => state.accounts);
   const dispatch = useDispatch();
   const [displayForm, setDisplayForm] = useState(false);
 
@@ -31,6 +33,19 @@ export default function UserProfile() {
     if (data?.body) dispatch(setUserNames({ firstName: data.body.firstName, lastName: data.body.lastName }));
     setDisplayForm(false);
   };
+
+  useEffect(() => {
+    if (!token) return;
+    (async () => {
+      const { data, error } = await api.getAccounts(token);
+      if (error?.status === 400) return dispatch(setAlert("Invalid token.", "warning"));
+      if (error?.status === 500) return dispatch(setAlert("Internal server error.", "danger"));
+      if (error) return dispatch(setAlert("Something went wrong.", "warning"));
+      if (data?.body) dispatch(setAccounts(data.body));
+    })();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   return (
     <main className="main bg-dark">
@@ -66,9 +81,9 @@ export default function UserProfile() {
         )}
       </div>
       <h2 className="sr-only">Accounts</h2>
-      <AccountLine title="Checking (x8349)" amount={2082.79} description="Available Balance" />
-      <AccountLine title="Savings (x6712)" amount={10928.42} description="Available Balance" />
-      <AccountLine title="Credit Card (x8349)" amount={184.3} description="Current Balance" />
+      {accounts.map((account) => (
+        <AccountLine key={account.id} type={account.type} transactions={account.transactions} amount={account.amount} />
+      ))}
     </main>
   );
 }
