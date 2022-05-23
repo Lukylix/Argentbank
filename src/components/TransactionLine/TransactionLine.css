@@ -1,0 +1,40 @@
+.transaction {
+  background-color: white;
+  border: 1px solid grey;
+  margin-bottom: 10px;
+  font-size: x-large;
+  display: block;
+  text-align: start;
+}
+
+.transaction summary {
+  position: relative;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  justify-content: space-around;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.transaction summary::-webkit-details-marker,
+.transaction summary::marker {
+  display: none;
+}
+
+.transaction summary .fa-chevron-down {
+  position: absolute;
+  font-size: xx-large;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.transaction[open] summary .fa-chevron-down {
+  transform: translateY(-50%) rotate(180deg);
+  
+}
+
+.transaction-detail {
+  padding: 0 50px;
+}

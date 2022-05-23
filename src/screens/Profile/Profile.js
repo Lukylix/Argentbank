@@ -82,7 +82,13 @@ export default function UserProfile() {
       </div>
       <h2 className="sr-only">Accounts</h2>
       {accounts.map((account) => (
-        <AccountLine key={account.id} type={account.type} transactions={account.transactions} amount={account.amount} />
+        <AccountLine
+          key={account.id}
+          id={account.id}
+          type={account.type}
+          transactions={account.transactions}
+          amount={account.amount}
+        />
       ))}
     </main>
   );

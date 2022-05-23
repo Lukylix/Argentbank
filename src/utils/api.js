@@ -81,5 +81,20 @@ const getAccounts = async (token) => {
   }
 };
 
-const api = { login, getUserProfile, updateUserProfile, getAccounts };
+const getTransactions = async (token, accountId) => {
+  try {
+    const res = await client.get(`/user/accounts/${accountId}/transactions`, {
+      headers: {
+        authorization: "Bearer " + token,
+      },
+    });
+    return { data: res.data, error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: { message: error?.response?.data?.message || error.message, status: error?.response?.status },
+    };
+  }
+};
+const api = { login, getUserProfile, updateUserProfile, getAccounts, getTransactions };
 export default api;
