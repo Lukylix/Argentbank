@@ -42,7 +42,7 @@ async function getUserProfile(token) {
   }
 }
 
-async function updateUserProfile(firstName, lastName, token) {
+async function updateUserProfile(token, firstName, lastName) {
   try {
     const res = await client.put(
       `/user/profile`,
@@ -96,5 +96,8 @@ const getTransactions = async (token, accountId) => {
     };
   }
 };
+
+export { login, getUserProfile, updateUserProfile, getAccounts, getTransactions };
 const api = { login, getUserProfile, updateUserProfile, getAccounts, getTransactions };
+
 export default api;

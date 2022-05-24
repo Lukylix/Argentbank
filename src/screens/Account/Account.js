@@ -1,20 +1,22 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setAccounts } from "../../utils/redux/accountsSlice";
 import { setTransactions } from "../../utils/redux/transactionsSlice";
-import { setAlert } from "../../utils/alert";
-import api from "../../utils/api";
 import formatAmount from "../../utils/formatAmount";
-import "./Account.css";
+import useApi from "../../hooks/useApi";
+import { getAccounts, getTransactions } from "../../utils/api";
+
 import TransactionLine from "../../components/TransactionLine";
 
+import "./Account.css";
 export default function Account() {
   const { accountId } = useParams();
   const account = useSelector((state) => state.accounts.find((account) => account.id === accountId));
-  const transactions = useSelector((state) => state.transactions);
+  const { transactions } = useSelector((state) => state.transactions);
   const token = useSelector((state) => state.token);
   const dispatch = useDispatch();
+  const [getAccountsRequest] = useApi(getAccounts);
+  const [getTransactionsRequest] = useApi(getTransactions);
 
   useEffect(() => {
     dispatch(setTransactions([]));
@@ -23,28 +25,14 @@ export default function Account() {
 
   useEffect(() => {
     if (!token) return;
-    // Get accounts
-    (async () => {
-      const { data, error } = await api.getAccounts(token);
-      if (error?.status === 400) return dispatch(setAlert("Invalid token.", "warning"));
-      if (error?.status === 500) return dispatch(setAlert("Internal server error.", "danger"));
-      if (error) return dispatch(setAlert("Something went wrong.", "warning"));
-      if (data?.body) dispatch(setAccounts(data.body));
-    })();
+    getAccountsRequest(token);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   useEffect(() => {
     if (!account || !token) return;
-    // Get account transactions
-    (async () => {
-      const { data, error } = await api.getTransactions(token, account.id);
-      if (error?.status === 400) return dispatch(setAlert("Account not found.", "warning"));
-      if (error?.status === 500) return dispatch(setAlert("Internal server error.", "danger"));
-      if (error) return dispatch(setAlert("Something went wrong.", "warning"));
-      if (data?.body) dispatch(setTransactions(data.body));
-    })();
+    getTransactionsRequest(token, account.id);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, token]);
