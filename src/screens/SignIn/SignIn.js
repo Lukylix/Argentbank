@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Spinner from "../../components/Spinner";
+
 import useApi from "../../hooks/useApi";
 import { login } from "../../utils/api";
 
@@ -9,7 +11,7 @@ import "./SignIn.css";
 export default function SignIn() {
   const navigate = useNavigate();
   const emailRef = useRef();
-  const [loginRequest] = useApi(login);
+  const [loginRequest, loginLoading] = useApi(login);
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("email");
@@ -53,7 +55,7 @@ export default function SignIn() {
             <input type="checkbox" id="rememberMe" />
             <label htmlFor="rememberMe">Remember me</label>
           </div>
-          <button className="sign-in-button">Sign In</button>
+          {loginLoading ? <Spinner /> : <button className="sign-in-button">Sign In</button>}
         </form>
       </section>
     </main>

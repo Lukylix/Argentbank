@@ -10,6 +10,7 @@ import TransactionLine from "../../components/TransactionLine";
 
 import "./Account.css";
 import Pagination from "../../components/Pagination";
+import Spinner from "../../components/Spinner";
 export default function Account() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -19,8 +20,8 @@ export default function Account() {
   const { transactions, page, totalPage } = useSelector((state) => state.transactions);
   const token = useSelector((state) => state.token);
   const dispatch = useDispatch();
-  const [getAccountsRequest] = useApi(getAccounts);
-  const [getTransactionsRequest] = useApi(getTransactions);
+  const [getAccountsRequest, accountLoading] = useApi(getAccounts);
+  const [getTransactionsRequest, transactionsLoading] = useApi(getTransactions);
   const baseUrlAccount = `/account/${accountId}?page=`;
 
   useEffect(() => {
@@ -52,35 +53,45 @@ export default function Account() {
   return (
     <main className="main bg-dark">
       <header className="accountInfo">
-        <h1 className="accountInfo-title">{`Argent Bank ${account?.type} (x${account?.transactions})`}</h1>
-        <p>
-          <span className="accountInfo-Amount">${formatAmount(account?.amount)}</span>
-          <br />
-          <span className="accountInfo-Description">
-            {account?.type === "Credit Card" ? "Current Balance" : "Available Balance"}
-          </span>
-        </p>
+        {accountLoading ? (
+          <Spinner />
+        ) : (
+          <>
+            <h1 className="accountInfo-title">{`Argent Bank ${account?.type} (x${account?.transactions})`}</h1>
+            <p>
+              <span className="accountInfo-Amount">${formatAmount(account?.amount)}</span>
+              <br />
+              <span className="accountInfo-Description">
+                {account?.type === "Credit Card" ? "Current Balance" : "Available Balance"}
+              </span>
+            </p>
+          </>
+        )}
       </header>
-      <section id="transactions">
-        <div className="columnInfos">
-          <p className="columnInfos-title">Date</p>
-          <p className="columnInfos-title">Description</p>
-          <p className="columnInfos-title">Amount</p>
-          <p className="columnInfos-title">Balance</p>
-        </div>
-        {transactions?.map((transaction) => (
-          <TransactionLine
-            key={transaction.id}
-            date={transaction.createdAt}
-            amount={transaction.amount}
-            description={transaction.description}
-            type={transaction.type}
-            category={transaction.categoryId.name}
-            note={transaction.note}
-            balance={transaction.balance}
-          />
-        ))}
-      </section>
+      {transactionsLoading ? (
+        <Spinner />
+      ) : (
+        <section id="transactions">
+          <div className="columnInfos">
+            <p className="columnInfos-title">Date</p>
+            <p className="columnInfos-title">Description</p>
+            <p className="columnInfos-title">Amount</p>
+            <p className="columnInfos-title">Balance</p>
+          </div>
+          {transactions?.map((transaction) => (
+            <TransactionLine
+              key={transaction.id}
+              date={transaction.createdAt}
+              amount={transaction.amount}
+              description={transaction.description}
+              type={transaction.type}
+              category={transaction.categoryId.name}
+              note={transaction.note}
+              balance={transaction.balance}
+            />
+          ))}
+        </section>
+      )}
       <Pagination baseUrl={baseUrlAccount} page={page} totalPage={totalPage} />
     </main>
   );

@@ -1,4 +1,5 @@
 import AccountLine from "../../components/AccountLine";
+import Spinner from "../../components/Spinner";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { setAlert } from "../../utils/alert";
@@ -13,8 +14,8 @@ export default function UserProfile() {
   const accounts = useSelector((state) => state.accounts);
   const dispatch = useDispatch();
   const [displayForm, setDisplayForm] = useState(false);
-  const [updateUserProfileRequest] = useApi(updateUserProfile);
-  const [getAccountsRequest] = useApi(getAccounts);
+  const [updateUserProfileRequest, updateProfileLoading] = useApi(updateUserProfile);
+  const [getAccountsRequest, accountsLoading] = useApi(getAccounts);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -41,46 +42,58 @@ export default function UserProfile() {
   return (
     <main className="main bg-dark">
       <div className="header">
-        <h1>
-          Welcome back
-          {!displayForm && (
-            <>
-              <br />
-              <span>
-                {firstName} {lastName}!
-              </span>
-            </>
-          )}
-        </h1>
-        {displayForm ? (
-          <form onSubmit={handleSubmit}>
-            <div className="form-line">
-              <input type="text" id="firstName" placeholder={firstName} />
-              <input type="text" id="lastName" placeholder={lastName} />
-            </div>
-            <div className="form-line">
-              <button>Save</button>
-              <button type="button" className="cancel" onClick={() => setDisplayForm(false)}>
-                Cancel
+        {firstName && lastName && !updateProfileLoading ? (
+          <>
+            <h1>
+              Welcome back
+              {!displayForm && (
+                <>
+                  <br />
+                  <span>
+                    {firstName} {lastName}!
+                  </span>
+                </>
+              )}
+            </h1>
+            {displayForm ? (
+              <form onSubmit={handleSubmit}>
+                <div className="form-line">
+                  <input type="text" id="firstName" placeholder={firstName} />
+                  <input type="text" id="lastName" placeholder={lastName} />
+                </div>
+                <div className="form-line">
+                  <button>Save</button>
+                  <button type="button" className="cancel" onClick={() => setDisplayForm(false)}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <button onClick={() => setDisplayForm(true)} className="edit-button">
+                Edit Name
               </button>
-            </div>
-          </form>
+            )}
+          </>
         ) : (
-          <button onClick={() => setDisplayForm(true)} className="edit-button">
-            Edit Name
-          </button>
+          !accountsLoading && <Spinner />
         )}
       </div>
       <h2 className="sr-only">Accounts</h2>
-      {accounts.map((account) => (
-        <AccountLine
-          key={account.id}
-          id={account.id}
-          type={account.type}
-          transactions={account.transactions}
-          amount={account.amount}
-        />
-      ))}
+      {accountsLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          {accounts.map((account) => (
+            <AccountLine
+              key={account.id}
+              id={account.id}
+              type={account.type}
+              transactions={account.transactions}
+              amount={account.amount}
+            />
+          ))}
+        </>
+      )}
     </main>
   );
 }
