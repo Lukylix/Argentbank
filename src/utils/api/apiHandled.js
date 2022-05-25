@@ -68,8 +68,8 @@ const getAccounts = (token) => async (dispatch, navigate, logout) => {
   return { data, error };
 };
 
-const getTransactions = (token, accountId) => async (dispatch, navigate, logout) => {
-  const { data, error } = await apiEndpoints.getTransactions(token, accountId);
+const getTransactions = (token, accountId, queryPage) => async (dispatch, navigate, logout) => {
+  const { data, error } = await apiEndpoints.getTransactions(token, accountId, queryPage);
   (() => {
     if (error?.status === 400) return dispatch(setAlert("Account not found.", "warning"));
     if (error?.status === 401) {

@@ -1,3 +1,8 @@
+.main {
+  position: relative;
+  padding-bottom: 150px;
+}
+
 .accountInfo{
   margin: 10px 0 100px 0;
   background-color: white;

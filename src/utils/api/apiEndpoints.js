@@ -81,9 +81,10 @@ const getAccounts = async (token) => {
   }
 };
 
-const getTransactions = async (token, accountId) => {
+const getTransactions = async (token, accountId, querryPage = 1) => {
   try {
-    const res = await client.get(`/user/accounts/${accountId}/transactions`, {
+    if (querryPage < 1) querryPage = 1;
+    const res = await client.get(`/user/accounts/${accountId}/transactions?page=${querryPage}`, {
       headers: {
         authorization: "Bearer " + token,
       },

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { setTransactions } from "../../utils/redux/transactionsSlice";
 import formatAmount from "../../utils/formatAmount";
 import useApi from "../../hooks/useApi";
@@ -9,14 +9,19 @@ import { getAccounts, getTransactions } from "../../utils/api";
 import TransactionLine from "../../components/TransactionLine";
 
 import "./Account.css";
+import Pagination from "../../components/Pagination";
 export default function Account() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const querryPage = new URLSearchParams(location.search).get("page");
   const { accountId } = useParams();
   const account = useSelector((state) => state.accounts.find((account) => account.id === accountId));
-  const { transactions } = useSelector((state) => state.transactions);
+  const { transactions, page, totalPage } = useSelector((state) => state.transactions);
   const token = useSelector((state) => state.token);
   const dispatch = useDispatch();
   const [getAccountsRequest] = useApi(getAccounts);
   const [getTransactionsRequest] = useApi(getTransactions);
+  const baseUrlAccount = `/account/${accountId}?page=`;
 
   useEffect(() => {
     dispatch(setTransactions([]));
@@ -32,10 +37,17 @@ export default function Account() {
 
   useEffect(() => {
     if (!account || !token) return;
-    getTransactionsRequest(token, account.id);
+    getTransactionsRequest(token, account.id, querryPage);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, token]);
+  }, [account, token, querryPage]);
+
+  useEffect(() => {
+    if (!querryPage || !totalPage) return;
+    if (querryPage > totalPage) navigate(`${baseUrlAccount}${totalPage}`);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalPage, querryPage]);
 
   return (
     <main className="main bg-dark">
@@ -69,6 +81,7 @@ export default function Account() {
           />
         ))}
       </section>
+      <Pagination baseUrl={baseUrlAccount} page={page} totalPage={totalPage} />
     </main>
   );
 }
