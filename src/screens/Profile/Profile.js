@@ -1,9 +1,12 @@
 import AccountLine from "../../components/AccountLine";
 import { useSelector, useDispatch } from "react-redux";
-import { setUserNames } from "../../utils/redux/userSlice";
 import { useState } from "react";
+
 import { setAlert } from "../../utils/alert";
-import api from "../../utils/api";
+
+import useApi from "../../hooks/useApi";
+import { updateUserProfile } from "../../utils/api";
+
 import "./Profile.css";
 
 export default function UserProfile() {
@@ -11,6 +14,7 @@ export default function UserProfile() {
   const token = useSelector((state) => state.token);
   const dispatch = useDispatch();
   const [displayForm, setDisplayForm] = useState(false);
+  const [updateUserProfileRequest] = useApi(updateUserProfile);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -22,13 +26,8 @@ export default function UserProfile() {
     }
     let { firstName: formFirstName, lastName: formLastName } = formData;
     if (!formFirstName && !formLastName) return dispatch(setAlert("Please fill at least one field.", "warning"));
-    if (!formFirstName) formFirstName = firstName;
-    if (!formLastName) formLastName = lastName;
-    const { data, error } = await api.updateUserProfile(formFirstName, formLastName, token);
-    if (error?.status === 400) return dispatch(setAlert("Invalid token.", "warning"));
-    if (error?.status === 500) return dispatch(setAlert("Internal server error.", "danger"));
-    if (error) return dispatch(setAlert("Something went wrong.", "warning"));
-    if (data?.body) dispatch(setUserNames({ firstName: data.body.firstName, lastName: data.body.lastName }));
+    const { error } = await updateUserProfileRequest(token, formFirstName || firstName, formLastName || lastName);
+    if (error) return;
     setDisplayForm(false);
   };
 

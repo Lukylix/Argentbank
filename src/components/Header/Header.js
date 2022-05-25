@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { setAlert } from "../../utils/alert";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../utils/redux/userSlice";
 import { setToken } from "../../utils/redux/tokenSlice";
-import api from "../../utils/api";
 import argentBankLogo from "../../assets/argentBankLogo.png";
 import "./Header.css";
+import useApi from "../../hooks/useApi";
+import { getUserProfile } from "../../utils/api";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -14,6 +14,7 @@ export default function Header() {
   const tokenLocalSorage = localStorage.getItem("token");
   const tokenRedux = useSelector((state) => state.token);
   const firstName = useSelector((state) => state.user?.firstName);
+  const [getUserProfileRequest] = useApi(getUserProfile);
 
   useEffect(() => {
     if (!tokenRedux && !tokenLocalSorage) return navigate("/sign-in");
@@ -22,18 +23,10 @@ export default function Header() {
 
   useEffect(
     () => {
-      (async () => {
+      (() => {
         if (!tokenRedux && !tokenLocalSorage) return;
         if (!tokenRedux && tokenLocalSorage) return dispatch(setToken(tokenLocalSorage));
-        const { data, error } = await api.getUserProfile(tokenRedux || tokenLocalSorage);
-        if (error?.status === 400 || error?.status === 401) {
-          dispatch(setAlert("Session expired.", "warning"));
-          logout();
-          return;
-        }
-        if (error?.status === 500) return dispatch(setAlert("Internal server error.", "danger"));
-        if (error) return dispatch(setAlert("Something went wrong.", "warning"));
-        if (data?.body) dispatch(setUser(data.body));
+        getUserProfileRequest(tokenRedux || tokenLocalSorage);
       })();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

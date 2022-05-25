@@ -4,12 +4,12 @@ const host = process.env.REACT_APP_API_HOST || "localhost";
 const port = process.env.REACT_APP_API_PORT || 3001;
 
 const client = axios.create({
-  baseURL: `http://${host}:${port}/api/v1/user`,
+  baseURL: `http://${host}:${port}/api/v1`,
 });
 
 async function login(email, password) {
   try {
-    const res = await client.post(`/login`, {
+    const res = await client.post(`/user/login`, {
       password,
       email,
     });
@@ -25,7 +25,7 @@ async function login(email, password) {
 async function getUserProfile(token) {
   try {
     const res = await client.post(
-      `/profile`,
+      `/user/profile`,
       {},
       {
         headers: {
@@ -42,10 +42,10 @@ async function getUserProfile(token) {
   }
 }
 
-async function updateUserProfile(firstName, lastName, token) {
+async function updateUserProfile(token, firstName, lastName) {
   try {
     const res = await client.put(
-      `/profile`,
+      `/user/profile`,
       {
         firstName,
         lastName,
@@ -65,5 +65,7 @@ async function updateUserProfile(firstName, lastName, token) {
   }
 }
 
+export { login, getUserProfile, updateUserProfile };
 const api = { login, getUserProfile, updateUserProfile };
+
 export default api;

@@ -1,15 +1,15 @@
-import { setAlert } from "../../utils/alert";
-import { useDispatch } from "react-redux";
-import api from "../../utils/api";
-import "./SignIn.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import { setToken } from "../../utils/redux/tokenSlice";
+
+import useApi from "../../hooks/useApi";
+import { login } from "../../utils/api";
+
+import "./SignIn.css";
 
 export default function SignIn() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const emailRef = useRef();
+  const [loginRequest] = useApi(login);
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("email");
@@ -30,17 +30,10 @@ export default function SignIn() {
       }
     }
     const { username: email, password, rememberMe } = formData;
-    const { data, error } = await api.login(email, password);
-    if (error?.status === 400) return dispatch(setAlert("Invalid credentials.", "warning"));
-    if (error?.status === 500) return dispatch(setAlert("Internal server error.", "danger"));
-    if (error) return dispatch(setAlert("Something went wrong.", "warning"));
+    const { error } = await loginRequest(email, password);
+    if (error) return;
     if (rememberMe && email) localStorage.setItem("email", email);
     if (!rememberMe) localStorage.removeItem("email");
-    if (data?.body?.token) {
-      localStorage.setItem("token", data.body.token);
-      dispatch(setToken(data.body.token));
-      navigate("/profile");
-    }
   };
   return (
     <main className="main bg-dark">
