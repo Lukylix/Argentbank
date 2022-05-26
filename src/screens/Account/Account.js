@@ -27,7 +27,7 @@ export default function Account() {
   const baseUrlAccount = `/account/${accountId}?page=`;
 
   useEffect(() => {
-    dispatch(setTransactions([]));
+    dispatch(setTransactions({ transactions: [] }));
     getCategoriesRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
