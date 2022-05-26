@@ -98,7 +98,43 @@ const getTransactions = async (token, accountId, querryPage = 1) => {
   }
 };
 
-export { login, getUserProfile, updateUserProfile, getAccounts, getTransactions };
-const api = { login, getUserProfile, updateUserProfile, getAccounts, getTransactions };
+const updateTransaction = async (token, accountId, transactionId, update) => {
+  try {
+    const res = await client.put(`/user/accounts/${accountId}/transactions/${transactionId}`, update, {
+      headers: {
+        authorization: "Bearer " + token,
+      },
+    });
+    return { data: res.data, error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: { message: error?.response?.data?.message || error.message, status: error?.response?.status },
+    };
+  }
+};
+
+const getCategories = async () => {
+  try {
+    const res = await client.get(`/categories`);
+    return { data: res.data, error: null };
+  } catch (error) {
+    return {
+      data: null,
+      error: { message: error?.response?.data?.message || error.message, status: error?.response?.status },
+    };
+  }
+};
+
+export { login, getUserProfile, updateUserProfile, getAccounts, getTransactions, updateTransaction, getCategories };
+const api = {
+  login,
+  getUserProfile,
+  updateUserProfile,
+  getAccounts,
+  getTransactions,
+  updateTransaction,
+  getCategories,
+};
 
 export default api;

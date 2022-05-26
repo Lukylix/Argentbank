@@ -4,6 +4,7 @@ import userReducer from "./userSlice";
 import tokenReducer from "./tokenSlice";
 import accountsReducer from "./accountsSlice";
 import transactionsReducer from "./transactionsSlice";
+import categoriesReducer from "./categoriesSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     token: tokenReducer,
     accounts: accountsReducer,
     transactions: transactionsReducer,
+    categories: categoriesReducer,
   },
 });

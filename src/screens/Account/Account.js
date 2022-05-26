@@ -4,7 +4,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { setTransactions } from "../../utils/redux/transactionsSlice";
 import formatAmount from "../../utils/formatAmount";
 import useApi from "../../hooks/useApi";
-import { getAccounts, getTransactions } from "../../utils/api";
+import { getAccounts, getTransactions, getCategories } from "../../utils/api";
 
 import TransactionLine from "../../components/TransactionLine";
 
@@ -19,13 +19,16 @@ export default function Account() {
   const account = useSelector((state) => state.accounts.find((account) => account.id === accountId));
   const { transactions, page, totalPage } = useSelector((state) => state.transactions);
   const token = useSelector((state) => state.token);
+  const categories = useSelector((state) => state.categories);
   const dispatch = useDispatch();
   const [getAccountsRequest, accountLoading] = useApi(getAccounts);
   const [getTransactionsRequest, transactionsLoading] = useApi(getTransactions);
+  const [getCategoriesRequest] = useApi(getCategories);
   const baseUrlAccount = `/account/${accountId}?page=`;
 
   useEffect(() => {
     dispatch(setTransactions([]));
+    getCategoriesRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -81,13 +84,15 @@ export default function Account() {
           {transactions?.map((transaction) => (
             <TransactionLine
               key={transaction.id}
+              id={transaction.id}
               date={transaction.createdAt}
               amount={transaction.amount}
               description={transaction.description}
               type={transaction.type}
-              category={transaction.categoryId.name}
+              category={transaction.categoryId}
               note={transaction.note}
               balance={transaction.balance}
+              categories={categories}
             />
           ))}
         </section>
