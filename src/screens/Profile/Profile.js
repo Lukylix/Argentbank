@@ -1,10 +1,12 @@
-import AccountLine from "../../components/AccountLine";
-import Spinner from "../../components/Spinner";
-import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
 import { setAlert } from "../../utils/alert";
 import useApi from "../../hooks/useApi";
 import { updateUserProfile, getAccounts } from "../../utils/api";
+
+import AccountLine from "../../components/AccountLine";
+import Spinner from "../../components/Spinner";
 
 import "./Profile.css";
 

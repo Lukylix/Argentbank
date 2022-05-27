@@ -1,16 +1,18 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
+
 import { setTransactions } from "../../utils/redux/transactionsSlice";
 import formatAmount from "../../utils/formatAmount";
 import useApi from "../../hooks/useApi";
 import { getAccounts, getTransactions, getCategories } from "../../utils/api";
 
 import TransactionLine from "../../components/TransactionLine";
-
-import "./Account.css";
 import Pagination from "../../components/Pagination";
 import Spinner from "../../components/Spinner";
+
+import "./Account.css";
+
 export default function Account() {
   const location = useLocation();
   const navigate = useNavigate();

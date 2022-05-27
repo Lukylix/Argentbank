@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Spinner from "../../components/Spinner";
-
 import useApi from "../../hooks/useApi";
 import { login } from "../../utils/api";
+
+import Spinner from "../../components/Spinner";
 
 import "./SignIn.css";
 

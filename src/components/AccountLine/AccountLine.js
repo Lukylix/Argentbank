@@ -1,10 +1,10 @@
-import formatAmount from "../../utils/formatAmount";
 import { Link } from "react-router-dom";
+
+import formatAmount from "../../utils/formatAmount";
+
 import "./AccountLine.css";
 
 export default function AccountLine({ id, type, amount, transactions }) {
-  // Format the amount to have 2 decimal and a comma every 3 digits
-
   return (
     <section className="account">
       <div className="account-content-wrapper">

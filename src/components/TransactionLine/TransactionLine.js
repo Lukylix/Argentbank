@@ -1,12 +1,14 @@
 import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import useApi from "../../hooks/useApi";
 import { updateTransaction } from "../../utils/api";
-import { useSelector } from "react-redux";
 import formatAmount from "../../utils/formatAmount";
 
-import "./TransactionLine.css";
 import Spinner from "../Spinner";
+
+import "./TransactionLine.css";
 
 const formatDate = (date) => {
   const monthNames = [

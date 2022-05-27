@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, connect } from "react-redux";
+
 import { removeAlert } from "../../utils/redux/alertSlice";
+
 import "./Alerts.css";
 
 const Alert = ({ alert: { id, message, type, time } }) => {
