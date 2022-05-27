@@ -98,8 +98,7 @@ export default function TransactionLine({ date, id, description, amount, balance
               </form>
             ) : (
               <p>
-                Note: {note}
-                <i onClick={() => setShowTextarea(true)} className="fa fa-pencil" />
+                Note: {note} <i onClick={() => setShowTextarea(true)} className="fa fa-pencil" />
               </p>
             )}
           </>
