@@ -16,16 +16,19 @@ import "./Account.css";
 export default function Account() {
   const location = useLocation();
   const navigate = useNavigate();
-  const querryPage = new URLSearchParams(location.search).get("page");
+  const dispatch = useDispatch();
   const { accountId } = useParams();
-  const account = useSelector((state) => state.accounts.find((account) => account.id === accountId));
+
   const { transactions, page, totalPage } = useSelector((state) => state.transactions);
+  const account = useSelector((state) => state.accounts.find((account) => account.id === accountId));
   const token = useSelector((state) => state.token);
   const categories = useSelector((state) => state.categories);
-  const dispatch = useDispatch();
+
   const [getAccountsRequest, accountLoading] = useApi(getAccounts);
   const [getTransactionsRequest, transactionsLoading] = useApi(getTransactions);
   const [getCategoriesRequest] = useApi(getCategories);
+
+  const querryPage = new URLSearchParams(location.search).get("page");
   const baseUrlAccount = `/account/${accountId}?page=`;
 
   useEffect(() => {

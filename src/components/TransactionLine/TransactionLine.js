@@ -33,12 +33,14 @@ const formatDate = (date) => {
 };
 
 export default function TransactionLine({ date, id, description, amount, balance, type, category, note, categories }) {
-  const { accountId } = useParams();
-  const token = useSelector((state) => state.token);
   const [showSelect, setShowSelect] = useState(false);
   const [showTextarea, setShowTextarea] = useState(false);
-  const [updateTransactionRequest, updateTransactionLoading] = useApi(updateTransaction);
+
   const refTextarea = useRef();
+  const { accountId } = useParams();
+  const token = useSelector((state) => state.token);
+  const [updateTransactionRequest, updateTransactionLoading] = useApi(updateTransaction);
+
   const categoriesSorted = [...categories].sort((a, b) => (a.id === category.id ? -1 : 0));
 
   const handleSelect = (e) => {

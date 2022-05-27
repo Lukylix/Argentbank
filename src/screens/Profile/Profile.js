@@ -11,11 +11,13 @@ import Spinner from "../../components/Spinner";
 import "./Profile.css";
 
 export default function UserProfile() {
+  const [displayForm, setDisplayForm] = useState(false);
+  const dispatch = useDispatch();
+
   const { firstName, lastName } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const accounts = useSelector((state) => state.accounts);
-  const dispatch = useDispatch();
-  const [displayForm, setDisplayForm] = useState(false);
+
   const [updateUserProfileRequest, updateProfileLoading] = useApi(updateUserProfile);
   const [getAccountsRequest, accountsLoading] = useApi(getAccounts);
 

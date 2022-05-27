@@ -6,16 +6,20 @@ import { removeAlert } from "../../utils/redux/alertSlice";
 import "./Alerts.css";
 
 const Alert = ({ alert: { id, message, type, time } }) => {
-  const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(true);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     setTimeout(() => setIsVisible(false), time - 250);
   }, [time]);
+
   const closeAlert = () => {
     setIsVisible(false);
     setTimeout(() => dispatch(removeAlert(id)), 250);
   };
+
   const captialize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
   return (
     <div className={`alert ${type} ${isVisible ? "" : "hide"}`}>
       <span onClick={closeAlert} className="closebtn">

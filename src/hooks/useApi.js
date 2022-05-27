@@ -9,8 +9,10 @@ export default function useApi(apifunc) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const logout = () => {
     localStorage.removeItem("token");
     dispatch(setToken(null));
