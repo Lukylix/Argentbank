@@ -26,13 +26,10 @@ export default function SignIn() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    let formData = {};
-    for (const element of event.target.elements) {
-      if (element.nodeName === "INPUT") {
-        formData[element.id] = element.type === "checkbox" ? element.checked : element.value;
-      }
-    }
+
+    const formData = Object.fromEntries(new FormData(event.target).entries());
     const { username: email, password, rememberMe } = formData;
+
     const { error } = await loginRequest(email, password);
     if (error) return;
     if (rememberMe && email) localStorage.setItem("email", email);
@@ -46,14 +43,14 @@ export default function SignIn() {
         <form onSubmit={handleSubmit}>
           <div className="input-wrapper">
             <label htmlFor="username">Username</label>
-            <input ref={emailRef} type="text" id="username" />
+            <input ref={emailRef} type="text" id="username" name="username" />
           </div>
           <div className="input-wrapper">
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" />
+            <input type="password" id="password" name="password" />
           </div>
           <div className="input-remember">
-            <input type="checkbox" id="rememberMe" />
+            <input type="checkbox" id="rememberMe" name="rememberMe" />
             <label htmlFor="rememberMe">Remember me</label>
           </div>
           {loginLoading ? <Spinner /> : <button className="sign-in-button">Sign In</button>}

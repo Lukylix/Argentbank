@@ -23,13 +23,10 @@ export default function UserProfile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    let formData = {};
-    for (const element of event.target.elements) {
-      if (element.nodeName === "INPUT") {
-        formData[element.id] = element.value;
-      }
-    }
-    let { firstName: formFirstName, lastName: formLastName } = formData;
+
+    const formData = Object.fromEntries(new FormData(event.target).entries());
+    const { firstName: formFirstName, lastName: formLastName } = formData;
+
     if (!formFirstName && !formLastName) return dispatch(setAlert("Please fill at least one field.", "warning"));
     const { error } = await updateUserProfileRequest(token, formFirstName || firstName, formLastName || lastName);
     if (error) return;
@@ -62,8 +59,8 @@ export default function UserProfile() {
             {displayForm ? (
               <form onSubmit={handleSubmit}>
                 <div className="form-line">
-                  <input type="text" id="firstName" placeholder={firstName} />
-                  <input type="text" id="lastName" placeholder={lastName} />
+                  <input type="text" id="firstName" name="firstName" placeholder={firstName} />
+                  <input type="text" id="lastName" name="lastName" placeholder={lastName} />
                 </div>
                 <div className="form-line">
                   <button>Save</button>
