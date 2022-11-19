@@ -3,7 +3,7 @@
   padding-bottom: 150px;
 }
 
-.accountInfo{
+.accountInfo {
   margin: 10px 0 100px 0;
   background-color: white;
   padding: 20px 0;
@@ -29,7 +29,10 @@
 
 .columnInfos {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  border: 1px solid transparent;
+  gap: 5px;
+  padding: 0 5px 10px 47px;
   color: whitesmoke;
 }
 .columnInfos-title {
@@ -37,4 +40,10 @@
   font-size: larger;
   font-weight: bold;
   margin-block-end: 0;
+}
+
+@media screen and (max-width: 500px) {
+  #transactions {
+    margin: 0 10px;
+  }
 }
