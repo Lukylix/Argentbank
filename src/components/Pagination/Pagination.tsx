@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import "./Pagination.css";
 
-export default function Pagination({ page, totalPage, baseUrl }) {
+export default function Pagination({ page, totalPage, baseUrl }: PaginationProps) {
   const navigate = useNavigate();
   return (
     <div className="pagination">

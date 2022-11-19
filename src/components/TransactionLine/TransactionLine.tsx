@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -10,7 +10,9 @@ import Spinner from "../Spinner";
 
 import "./TransactionLine.css";
 
-const formatDate = (date) => {
+import { RootSate } from "../../utils/redux/store";
+
+const formatDate = (date: string) => {
   const monthNames = [
     "January",
     "February",
@@ -32,27 +34,27 @@ const formatDate = (date) => {
   return `${monthNames[monthIndex]} ${day}th, ${year}`;
 };
 
-export default function TransactionLine({ date, id, description, amount, balance, type, category, note, categories }) {
+export default function TransactionLine({ date, id, description, amount, balance, type, category, note, categories }: TransactionLineProps) {
   const [showSelect, setShowSelect] = useState(false);
   const [showTextarea, setShowTextarea] = useState(false);
 
-  const refTextarea = useRef();
+  const refTextarea = useRef<HTMLTextAreaElement>(null);
   const { accountId } = useParams();
-  const token = useSelector((state) => state.token);
+  const token = useSelector((state: RootSate) => state.token);
   const [updateTransactionRequest, updateTransactionLoading] = useApi(updateTransaction);
 
   const categoriesSorted = [...categories].sort((a, b) => (a.id === category.id ? -1 : 0));
 
-  const handleSelect = (e) => {
+  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
     setShowSelect(false);
     const categoryId = e.target.value;
     updateTransactionRequest(token, accountId, id, { categoryId });
   };
 
-  const handleTextarea = (e) => {
+  const handleTextarea = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     setShowTextarea(false);
-    const note = refTextarea.current.value;
+    const note = refTextarea?.current?.value;
     updateTransactionRequest(token, accountId, id, { note });
   };
 

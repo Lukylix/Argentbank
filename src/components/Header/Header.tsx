@@ -10,12 +10,14 @@ import { getUserProfile } from "../../utils/api";
 import argentBankLogo from "../../assets/argentBankLogo.png";
 import "./Header.css";
 
+import { RootSate } from "../../utils/redux/store";
+
 export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const tokenLocalSorage = localStorage.getItem("token");
-  const tokenRedux = useSelector((state) => state.token);
-  const firstName = useSelector((state) => state.user?.firstName);
+  const tokenRedux = useSelector((state: RootSate) => state.token);
+  const firstName = useSelector((state: RootSate) => state.user?.firstName);
   const [getUserProfileRequest] = useApi(getUserProfile);
 
   useEffect(() => {

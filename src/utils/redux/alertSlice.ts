@@ -2,14 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const alertSlice = createSlice({
   name: "alert",
-  initialState: [],
+  initialState: [] as Alert[],
   reducers: {
-    addAlert: (state, action) => {
+    addAlert: (state, { payload: { message, type, id, time } }: { payload: Alert }) => {
       state.push({
-        message: action.payload.message,
-        type: action.payload.alertType,
-        id: action.payload.id,
-        time: action.payload.time,
+        message,
+        type,
+        id,
+        time,
       });
     },
     removeAlert: (state, action) => {

@@ -6,7 +6,7 @@ import Account from "./screens/Account";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Alerts from "./components/Alerts";
-import { store } from "./utils/redux/store";
+import { store } from "./utils/redux/store.js";
 import { Provider } from "react-redux";
 
 function App() {

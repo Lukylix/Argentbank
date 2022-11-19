@@ -16,3 +16,6 @@ export const store = configureStore({
     categories: categoriesReducer,
   },
 });
+
+export type AppDispatch = typeof store.dispatch;
+export type RootSate = ReturnType<typeof store.getState>;

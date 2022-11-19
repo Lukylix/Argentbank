@@ -13,22 +13,24 @@ import Spinner from "../../components/Spinner";
 
 import "./Account.css";
 
+import { RootSate } from "../../utils/redux/store";
+
 export default function Account() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { accountId } = useParams();
 
-  const { transactions, page, totalPage } = useSelector((state) => state.transactions);
-  const account = useSelector((state) => state.accounts.find((account) => account.id === accountId));
-  const token = useSelector((state) => state.token);
-  const categories = useSelector((state) => state.categories);
+  const { transactions, page, totalPage } = useSelector((state: RootSate) => state.transactions);
+  const account = useSelector((state: RootSate) => state.accounts.find((account) => account.id === accountId));
+  const token = useSelector((state: RootSate) => state.token);
+  const categories = useSelector((state: RootSate) => state.categories);
 
   const [getAccountsRequest, accountLoading] = useApi(getAccounts);
   const [getTransactionsRequest, transactionsLoading] = useApi(getTransactions);
   const [getCategoriesRequest] = useApi(getCategories);
 
-  const querryPage = new URLSearchParams(location.search).get("page");
+  const querryPage = parseInt(new URLSearchParams(location.search).get("page")||"1");
   const baseUrlAccount = `/account/${accountId}?page=`;
 
   useEffect(() => {

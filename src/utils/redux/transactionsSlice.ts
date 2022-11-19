@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 export const transactionsSlice = createSlice({
   name: "transactions",
   initialState: {
-    transactions: [],
-  },
+    transactions: [] as Transaction[],
+  } as TransactionBody,
   reducers: {
     setTransactions: (state, action) => {
       return action.payload;

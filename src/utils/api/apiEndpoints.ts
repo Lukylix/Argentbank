@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 const host = import.meta.env.VITE_APP_API_HOST || "localhost";
 const port = import.meta.env.VITE_APP_API_PORT || 3001;
@@ -7,27 +7,32 @@ const client = axios.create({
   baseURL: `http://${host}:${port}/api/v1`,
 });
 
-const createApiCall = (func) => {
-  return async (...args) => {
+const createApiCall =
+  (func: Function) =>
+  async (...args: any[]): Promise<EndPointResponse> => {
     try {
       const res = await func(...args);
       return { data: res.data, error: null };
     } catch (error) {
-      return {
-        data: null,
-        error: { message: error?.response?.data?.message || error.message, status: error?.response?.status },
-      };
+      if (axios.isAxiosError(error)) {
+        const err = error as AxiosError<ErrorResponse>;
+        return {
+          data: null,
+          error: { message: err?.response?.data?.message || err.message, status: err?.response?.status },
+        };
+      }
+      if (error instanceof Error) return { data: null, error: { message: error.message } };
+      return { data: null, error: { message: "Something went wrong." } };
     }
   };
-};
 
-const login = async (email, password) =>
+const login = async (email: string, password: string): Promise<AxiosResponse<LoginResponse>> =>
   await client.post(`/user/login`, {
     password,
     email,
   });
 
-const getUserProfile = async (token) =>
+const getUserProfile = async (token: string): Promise<AxiosResponse<GetUserProfileResponse>> =>
   await client.post(
     `/user/profile`,
     {},
@@ -38,7 +43,11 @@ const getUserProfile = async (token) =>
     }
   );
 
-const updateUserProfile = async (token, firstName, lastName) =>
+const updateUserProfile = async (
+  token: string,
+  firstName: string,
+  lastName: string
+): Promise<AxiosResponse<UpdateUserProfileResponse>> =>
   await client.put(
     `/user/profile`,
     {
@@ -52,14 +61,18 @@ const updateUserProfile = async (token, firstName, lastName) =>
     }
   );
 
-const getAccounts = async (token) =>
+const getAccounts = async (token: string): Promise<AxiosResponse<Account[]>> =>
   await client.get(`/user/accounts`, {
     headers: {
       authorization: "Bearer " + token,
     },
   });
 
-const getTransactions = async (token, accountId, querryPage = 1) => {
+const getTransactions = async (
+  token: string,
+  accountId: string,
+  querryPage = 1
+): Promise<AxiosResponse<GetTransactionsResponse>> => {
   if (querryPage < 1) querryPage = 1;
   return await client.get(`/user/accounts/${accountId}/transactions?page=${querryPage}`, {
     headers: {
@@ -68,14 +81,19 @@ const getTransactions = async (token, accountId, querryPage = 1) => {
   });
 };
 
-const updateTransaction = async (token, accountId, transactionId, update) =>
+const updateTransaction = async (
+  token: string,
+  accountId: string,
+  transactionId: string,
+  update: { categoryId?: string; note?: string }
+): Promise<AxiosResponse<UpdateTransactionResponse>> =>
   await client.put(`/user/accounts/${accountId}/transactions/${transactionId}`, update, {
     headers: {
       authorization: "Bearer " + token,
     },
   });
 
-const getCategories = async () => await client.get(`/categories`);
+const getCategories = async (): Promise<AxiosResponse<Category[]>> => await client.get(`/categories`);
 
 const api = {
   login: createApiCall(login),
@@ -86,4 +104,5 @@ const api = {
   updateTransaction: createApiCall(updateTransaction),
   getCategories: createApiCall(getCategories),
 };
+
 export default api;

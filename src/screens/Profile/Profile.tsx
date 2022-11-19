@@ -10,13 +10,15 @@ import Spinner from "../../components/Spinner";
 
 import "./Profile.css";
 
+import { RootSate } from "../../utils/redux/store";
+
 export default function UserProfile() {
   const [displayForm, setDisplayForm] = useState(false);
   const dispatch = useDispatch();
 
-  const { firstName, lastName } = useSelector((state) => state.user);
-  const token = useSelector((state) => state.token);
-  const accounts = useSelector((state) => state.accounts);
+  const { firstName, lastName } = useSelector((state: RootSate) => state.user);
+  const token = useSelector((state: RootSate) => state.token);
+  const accounts = useSelector((state: RootSate) => state.accounts);
 
   const [updateUserProfileRequest, updateProfileLoading] = useApi(updateUserProfile);
   const [getAccountsRequest, accountsLoading] = useApi(getAccounts);
@@ -27,6 +29,7 @@ export default function UserProfile() {
     const formData = Object.fromEntries(new FormData(event.target).entries());
     const { firstName: formFirstName, lastName: formLastName } = formData;
 
+    // @ts-ignore
     if (!formFirstName && !formLastName) return dispatch(setAlert("Please fill at least one field.", "warning"));
     const { error } = await updateUserProfileRequest(token, formFirstName || firstName, formLastName || lastName);
     if (error) return;

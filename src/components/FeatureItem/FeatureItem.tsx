@@ -1,6 +1,6 @@
 import "./FeatureItem.css";
 
-export default function FeatureItem({ icon, alt, title, description }) {
+export default function FeatureItem({ icon, alt, title, description }: FeatureItemProps) {
   return (
     <div className="feature-item">
       <img src={icon} alt={alt} className="feature-icon" />

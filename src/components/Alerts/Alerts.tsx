@@ -3,22 +3,26 @@ import { useDispatch, connect } from "react-redux";
 
 import { removeAlert } from "../../utils/redux/alertSlice";
 
+import { RootSate } from "../../utils/redux/store";
+
 import "./Alerts.css";
 
-const Alert = ({ alert: { id, message, type, time } }) => {
+const animatioDuration = 250
+
+const Alert = ({ alert: { id, message, type, time } } : AlertProps) => {
   const [isVisible, setIsVisible] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setTimeout(() => setIsVisible(false), time - 250);
+    setTimeout(() => setIsVisible(false), time - animatioDuration);
   }, [time]);
 
   const closeAlert = () => {
     setIsVisible(false);
-    setTimeout(() => dispatch(removeAlert(id)), 250);
+    setTimeout(() => dispatch(removeAlert(id)), animatioDuration);
   };
 
-  const captialize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+  const captialize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
   return (
     <div className={`alert ${type} ${isVisible ? "" : "hide"}`}>
@@ -30,16 +34,16 @@ const Alert = ({ alert: { id, message, type, time } }) => {
   );
 };
 
-function Alerts({ alerts }) {
+function Alerts({ alerts } : {alerts: Alert[]}) {
   return (
     alerts?.length > 0 && (
       <section className="alerts">
         {[[...alerts].reverse().map((alert) => <Alert key={alert.id} alert={alert} />)]}
       </section>
-    )
+    ) || <></>
   );
 }
 
-const mapStateToProps = (state) => ({ alerts: state.alert });
+const mapStateToProps = (state: RootSate) => ({ alerts: state.alert });
 
 export default connect(mapStateToProps)(Alerts);

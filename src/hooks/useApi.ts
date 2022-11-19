@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { setUser } from "../utils/redux/userSlice";
 import { setToken } from "../utils/redux/tokenSlice";
 
-export default function useApi(apifunc) {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
+import { ApiFunction } from "../utils/api";
+
+export default function useApi(apifunc: ApiFunction) {
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState<{ message: string; status?: number } | null>(null);
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -20,8 +22,9 @@ export default function useApi(apifunc) {
     navigate("/");
   };
 
-  const request = async (...args) => {
+  const request = async (...args: any[]) => {
     setLoading(true);
+    // @ts-ignore
     const { data, error } = await apifunc(...args)(dispatch, navigate, logout);
     setData(data);
     setError(error);
