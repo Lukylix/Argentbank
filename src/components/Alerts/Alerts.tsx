@@ -7,9 +7,9 @@ import { RootSate } from "../../utils/redux/store";
 
 import "./Alerts.css";
 
-const animatioDuration = 250
+const animatioDuration = 250;
 
-const Alert = ({ alert: { id, message, type, time } } : AlertProps) => {
+const Alert = ({ alert: { id, message, type, time } }: IAlertProps) => {
   const [isVisible, setIsVisible] = useState(true);
   const dispatch = useDispatch();
 
@@ -34,13 +34,13 @@ const Alert = ({ alert: { id, message, type, time } } : AlertProps) => {
   );
 };
 
-function Alerts({ alerts } : {alerts: Alert[]}) {
+function Alerts({ alerts }: { alerts: IAlert[] }) {
   return (
-    alerts?.length > 0 && (
+    (alerts?.length > 0 && (
       <section className="alerts">
         {[[...alerts].reverse().map((alert) => <Alert key={alert.id} alert={alert} />)]}
       </section>
-    ) || <></>
+    )) || <></>
   );
 }
 

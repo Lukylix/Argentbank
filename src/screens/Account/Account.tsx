@@ -1,64 +1,15 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import useAccountLogic from "./useAccountLogic";
+import useAccountData from "./useAccountData";
 
-import { setTransactions } from "../../utils/redux/transactionsSlice";
 import formatAmount from "../../utils/formatAmount";
-import useApi from "../../hooks/useApi";
-import { getAccounts, getTransactions, getCategories } from "../../utils/api";
 
-import TransactionLine from "../../components/TransactionLine";
-import Pagination from "../../components/Pagination";
-import Spinner from "../../components/Spinner";
+import { TransactionLine, Pagination, Spinner } from "../../components";
 
 import "./Account.css";
 
-import { RootSate } from "../../utils/redux/store";
-
 export default function Account() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { accountId } = useParams();
-
-  const { transactions, page, totalPage } = useSelector((state: RootSate) => state.transactions);
-  const account = useSelector((state: RootSate) => state.accounts.find((account) => account.id === accountId));
-  const token = useSelector((state: RootSate) => state.token);
-  const categories = useSelector((state: RootSate) => state.categories);
-
-  const [getAccountsRequest, accountLoading] = useApi(getAccounts);
-  const [getTransactionsRequest, transactionsLoading] = useApi(getTransactions);
-  const [getCategoriesRequest] = useApi(getCategories);
-
-  const querryPage = parseInt(new URLSearchParams(location.search).get("page")||"1");
-  const baseUrlAccount = `/account/${accountId}?page=`;
-
-  useEffect(() => {
-    dispatch(setTransactions({ transactions: [] }));
-    getCategoriesRequest();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (!token) return;
-    getAccountsRequest(token);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
-
-  useEffect(() => {
-    if (!account || !token) return;
-    getTransactionsRequest(token, account.id, querryPage);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, token, querryPage]);
-
-  useEffect(() => {
-    if (!querryPage || !totalPage) return;
-    if (querryPage > totalPage) navigate(`${baseUrlAccount}${totalPage}`);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalPage, querryPage]);
+  const { accountLoading, transactionsLoading } = useAccountLogic();
+  const { account, transactions, page, totalPage } = useAccountData();
 
   return (
     <main className="main bg-dark">
@@ -99,12 +50,11 @@ export default function Account() {
               category={transaction.categoryId}
               note={transaction.note}
               balance={transaction.balance}
-              categories={categories}
             />
           ))}
         </section>
       )}
-      <Pagination baseUrl={baseUrlAccount} page={page} totalPage={totalPage} />
+      <Pagination page={page} totalPage={totalPage} />
     </main>
   );
 }

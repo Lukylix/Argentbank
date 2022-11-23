@@ -1,47 +1,19 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
-import { setAlert } from "../../utils/alert";
-import useApi from "../../hooks/useApi";
-import { updateUserProfile, getAccounts } from "../../utils/api";
-
-import AccountLine from "../../components/AccountLine";
-import Spinner from "../../components/Spinner";
+import { AccountLine, Spinner } from "../../components";
 
 import "./Profile.css";
 
 import { RootSate } from "../../utils/redux/store";
+import useProfileForm from "./useProfileForm";
 
 export default function UserProfile() {
   const [displayForm, setDisplayForm] = useState(false);
-  const dispatch = useDispatch();
+  const { accountsLoading, updateProfileLoading, handleSubmit } = useProfileForm(setDisplayForm);
 
   const { firstName, lastName } = useSelector((state: RootSate) => state.user);
-  const token = useSelector((state: RootSate) => state.token);
   const accounts = useSelector((state: RootSate) => state.accounts);
-
-  const [updateUserProfileRequest, updateProfileLoading] = useApi(updateUserProfile);
-  const [getAccountsRequest, accountsLoading] = useApi(getAccounts);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const formData = Object.fromEntries(new FormData(event.target).entries());
-    const { firstName: formFirstName, lastName: formLastName } = formData;
-
-    // @ts-ignore
-    if (!formFirstName && !formLastName) return dispatch(setAlert("Please fill at least one field.", "warning"));
-    const { error } = await updateUserProfileRequest(token, formFirstName || firstName, formLastName || lastName);
-    if (error) return;
-    setDisplayForm(false);
-  };
-
-  useEffect(() => {
-    if (!token) return;
-    getAccountsRequest(token);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
 
   return (
     <main className="main bg-dark">

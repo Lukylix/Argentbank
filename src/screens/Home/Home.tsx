@@ -1,4 +1,4 @@
-import FeatureItem from "../../components/FeatureItem";
+import { FeatureItem } from "../../components";
 
 import iconChat from "../../assets/icon-chat.png";
 import iconMoney from "../../assets/icon-money.png";

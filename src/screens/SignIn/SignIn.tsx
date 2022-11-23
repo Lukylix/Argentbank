@@ -1,40 +1,11 @@
-import { ChangeEvent, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import useLoginForm from "./useLoginForm";
 
-import useApi from "../../hooks/useApi";
-import { login } from "../../utils/api";
-
-import Spinner from "../../components/Spinner";
+import { Spinner } from "../../components";
 
 import "./SignIn.css";
 
 export default function SignIn() {
-  const navigate = useNavigate();
-  const emailRef = useRef<HTMLInputElement>(null);
-
-  const [loginRequest, loginLoading] = useApi(login);
-
-  useEffect(() => {
-    const savedEmail = localStorage.getItem("email");
-    if (savedEmail && emailRef.current) emailRef.current.value = savedEmail;
-  }, [emailRef]);
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) navigate("/profile");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const formData = Object.fromEntries(new FormData(event.target).entries());
-    const { username: email, password, rememberMe } = formData;
-
-    const { error } = await loginRequest(email, password);
-    if (error) return;
-    if (rememberMe && email) localStorage.setItem("email", email.toString());
-    if (!rememberMe) localStorage.removeItem("email");
-  };
+  const { handleSubmit, emailRef, loginLoading } = useLoginForm();
   return (
     <main className="main bg-dark">
       <section className="sign-in-content">
@@ -50,7 +21,7 @@ export default function SignIn() {
             <input type="password" id="password" name="password" />
           </div>
           <div className="input-remember">
-            <input type="checkbox" id="rememberMe" name="rememberMe" />
+            <input type="checkbox" id="rememberMe" name="rememberMe" defaultChecked />
             <label htmlFor="rememberMe">Remember me</label>
           </div>
           {loginLoading ? <Spinner /> : <button className="sign-in-button">Sign In</button>}

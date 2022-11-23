@@ -1,4 +1,4 @@
-interface UserProfile {
+interface IUserProfile {
   id: string;
   firstName: string;
   lastName: string;
@@ -7,7 +7,7 @@ interface UserProfile {
   updatedAt: string;
 }
 
-interface Account {
+interface IAccount {
   id: string;
   userId: string;
   amount: number;
@@ -17,16 +17,16 @@ interface Account {
   updatedAt: string;
 }
 
-interface Category {
+interface ICategory {
   name: string;
   id: string;
 }
 
-interface Transaction {
+interface ITransaction {
   note: string;
   accountId: string;
   userId: string;
-  categoryId: Category;
+  categoryId: ICategory;
   amount: number;
   balance: number;
   type: string;
@@ -36,9 +36,9 @@ interface Transaction {
   id: string;
 }
 
-interface TransactionBody {
+interface ITransactionBody {
   page: number;
   totalPage: number;
   total: number;
-  transactions: Transaction[];
+  transactions: ITransaction[];
 }

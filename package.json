@@ -14,7 +14,9 @@
     "start": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint"
   },
   "eslintConfig": {
     "extends": [
@@ -36,7 +38,10 @@
   },
   "devDependencies": {
     "@types/react-dom": "^18.0.9",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
     "@vitejs/plugin-react": "^2.2.0",
+    "eslint": "^8.28.0",
     "prettier": "^2.6.2",
     "typescript": "^4.9.3",
     "vite": "^3.2.4",

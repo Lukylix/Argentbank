@@ -1,30 +1,33 @@
-interface AccountLineProps {
+interface IAccountLineProps {
   id: string;
   type: string;
   amount: number;
   transactions: number;
 }
 
-interface AlertProps {
-  alert: Alert;
+interface IAlertProps {
+  alert: IAlert;
 }
 
-interface FeatureItemProps {
+interface IFeatureItemProps {
   icon: string;
   alt: string;
   title: string;
   description: string;
 }
 
-interface PaginationProps {
+interface IPaginationProps {
   page: number;
   totalPage: number;
-  baseUrl: string;
 }
 
-interface TransactionLineProps
-  extends Omit<Transaction, "categoryId" | "updatedAt" | "createdAt" | "accountId" | "userId"> {
-  category: Category;
+interface ITransactionLineProps {
+  id: string;
   date: string;
-  categories: Category[];
+  note: string;
+  amount: number;
+  balance: number;
+  type: string;
+  description: string;
+  category: ICategory;
 }

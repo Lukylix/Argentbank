@@ -5,6 +5,6 @@ export const setAlert =
   (message: string, type: AlertTypes, time = 4000) =>
   (dispatch: AppDispatch) => {
     const id = Date.now();
-    dispatch(addAlert({ message, type, time, id } as Alert));
+    dispatch(addAlert({ message, type, time, id } as IAlert));
     setTimeout(() => dispatch(removeAlert(id)), time);
   };

@@ -1,11 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./screens/Home";
-import Profile from "./screens/Profile";
-import SignIn from "./screens/SignIn";
-import Account from "./screens/Account";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Alerts from "./components/Alerts";
+
+import { Home, SignIn, Profile, Account } from "./screens";
+import { Header, Footer, Alerts } from "./components";
+
 import { store } from "./utils/redux/store";
 import { Provider } from "react-redux";
 

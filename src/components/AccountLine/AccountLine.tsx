@@ -4,7 +4,7 @@ import formatAmount from "../../utils/formatAmount";
 
 import "./AccountLine.css";
 
-export default function AccountLine({ id , type, amount, transactions }: AccountLineProps) {
+export default function AccountLine({ id, type, amount, transactions }: IAccountLineProps) {
   return (
     <section className="account">
       <div className="account-content-wrapper">

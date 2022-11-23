@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const accountsSlice = createSlice({
   name: "accounts",
-  initialState: [] as Account[],
+  initialState: [] as IAccount[],
   reducers: {
     setAccounts: (state, action) => {
       return action.payload;

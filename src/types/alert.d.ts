@@ -1,6 +1,6 @@
 type AlertTypes = "success" | "warning" | "info" | "danger";
 
-interface Alert {
+interface IAlert {
   message: string;
   type: AlertTypes;
   id: number;

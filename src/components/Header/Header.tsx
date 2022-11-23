@@ -15,27 +15,20 @@ import { RootSate } from "../../utils/redux/store";
 export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const tokenLocalSorage = localStorage.getItem("token");
+
   const tokenRedux = useSelector((state: RootSate) => state.token);
   const firstName = useSelector((state: RootSate) => state.user?.firstName);
+
+  const tokenLocalSorage = localStorage.getItem("token");
   const [getUserProfileRequest] = useApi(getUserProfile);
 
   useEffect(() => {
-    if (!tokenRedux && !tokenLocalSorage) return navigate("/sign-in");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    (() => {
+      if (!tokenRedux && !tokenLocalSorage) return navigate("/sign-in");
+      if (!tokenRedux && tokenLocalSorage) dispatch(setToken(tokenLocalSorage));
+      getUserProfileRequest(tokenRedux || tokenLocalSorage);
+    })();
   }, []);
-
-  useEffect(
-    () => {
-      (() => {
-        if (!tokenRedux && !tokenLocalSorage) return;
-        if (!tokenRedux && tokenLocalSorage) return dispatch(setToken(tokenLocalSorage));
-        getUserProfileRequest(tokenRedux || tokenLocalSorage);
-      })();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tokenRedux]
-  );
 
   const logout = () => {
     localStorage.removeItem("token");

@@ -12,7 +12,11 @@ import { NavigateFunction } from "react-router-dom";
 
 const formatErrorMessage = (message: string) => message.replace(/^Error: /g, "");
 
-const classicErrorHandler = (error: { message: string; status?: number }, dispatch: AppDispatch, logout: Function) => {
+const classicErrorHandler = (
+  error: { message: string; status?: number },
+  dispatch: AppDispatch,
+  logout: () => void
+) => {
   if (error?.status === 401) {
     dispatch(setAlert("Session expired.", "warning"));
     logout();
@@ -23,7 +27,8 @@ const classicErrorHandler = (error: { message: string; status?: number }, dispat
 };
 
 const login =
-  (email: string, password: string) => async (dispatch: AppDispatch, navigate: NavigateFunction, logout: Function) => {
+  (email: string, password: string) =>
+  async (dispatch: AppDispatch, navigate: NavigateFunction, logout: () => void) => {
     const { data, error } = await apiEndpoints.login(email, password);
     (() => {
       if (error) return classicErrorHandler(error, dispatch, logout);
@@ -37,7 +42,7 @@ const login =
   };
 
 const getUserProfile =
-  (token: string) => async (dispatch: AppDispatch, navigate: NavigateFunction, logout: Function) => {
+  (token: string) => async (dispatch: AppDispatch, navigate: NavigateFunction, logout: () => void) => {
     const { data, error } = await apiEndpoints.getUserProfile(token);
     (() => {
       if (error) return classicErrorHandler(error, dispatch, logout);
@@ -48,7 +53,7 @@ const getUserProfile =
 
 const updateUserProfile =
   (token: string, firstName: string, lastName: string) =>
-  async (dispatch: AppDispatch, navigate: NavigateFunction, logout: Function) => {
+  async (dispatch: AppDispatch, navigate: NavigateFunction, logout: () => void) => {
     const { data, error } = await apiEndpoints.updateUserProfile(token, firstName, lastName);
     (() => {
       if (error) return classicErrorHandler(error, dispatch, logout);
@@ -57,18 +62,19 @@ const updateUserProfile =
     return { data, error };
   };
 
-const getAccounts = (token: string) => async (dispatch: AppDispatch, navigate: NavigateFunction, logout: Function) => {
-  const { data, error } = await apiEndpoints.getAccounts(token);
-  (() => {
-    if (error) return classicErrorHandler(error, dispatch, logout);
-    if (data?.body) dispatch(setAccounts(data.body));
-  })();
-  return { data, error };
-};
+const getAccounts =
+  (token: string) => async (dispatch: AppDispatch, navigate: NavigateFunction, logout: () => void) => {
+    const { data, error } = await apiEndpoints.getAccounts(token);
+    (() => {
+      if (error) return classicErrorHandler(error, dispatch, logout);
+      if (data?.body) dispatch(setAccounts(data.body));
+    })();
+    return { data, error };
+  };
 
 const getTransactions =
   (token: string, accountId: string, queryPage: string) =>
-  async (dispatch: AppDispatch, navigate: NavigateFunction, logout: Function) => {
+  async (dispatch: AppDispatch, navigate: NavigateFunction, logout: () => void) => {
     const { data, error } = await apiEndpoints.getTransactions(token, accountId, queryPage);
     (() => {
       if (error) return classicErrorHandler(error, dispatch, logout);
@@ -79,7 +85,7 @@ const getTransactions =
 
 const updateTransaction =
   (token: string, accountId: string, transationId: string, update: { categoryId?: string; note: string }) =>
-  async (dispatch: AppDispatch, navigate: NavigateFunction, logout: Function) => {
+  async (dispatch: AppDispatch, navigate: NavigateFunction, logout: () => void) => {
     const { data, error } = await apiEndpoints.updateTransaction(token, accountId, transationId, update);
     (() => {
       if (error) return classicErrorHandler(error, dispatch, logout);
@@ -88,7 +94,7 @@ const updateTransaction =
     return { data, error };
   };
 
-const getCategories = () => async (dispatch: AppDispatch, navigate: NavigateFunction, logout: Function) => {
+const getCategories = () => async (dispatch: AppDispatch, navigate: NavigateFunction, logout: () => void) => {
   const { data, error } = await apiEndpoints.getCategories();
   (() => {
     if (error) return classicErrorHandler(error, dispatch, logout);

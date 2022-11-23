@@ -1,16 +1,16 @@
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, ChangeEvent, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import useApi from "../../hooks/useApi";
 import { updateTransaction } from "../../utils/api";
+import { RootSate } from "../../utils/redux/store";
+
 import formatAmount from "../../utils/formatAmount";
 
 import Spinner from "../Spinner";
 
 import "./TransactionLine.css";
-
-import { RootSate } from "../../utils/redux/store";
 
 const formatDate = (date: string) => {
   const monthNames = [
@@ -34,16 +34,29 @@ const formatDate = (date: string) => {
   return `${monthNames[monthIndex]} ${day}th, ${year}`;
 };
 
-export default function TransactionLine({ date, id, description, amount, balance, type, category, note, categories }: TransactionLineProps) {
+export default function TransactionLine({
+  date,
+  id,
+  description,
+  amount,
+  balance,
+  type,
+  category,
+  note,
+}: ITransactionLineProps) {
   const [showSelect, setShowSelect] = useState(false);
   const [showTextarea, setShowTextarea] = useState(false);
 
   const refTextarea = useRef<HTMLTextAreaElement>(null);
   const { accountId } = useParams();
   const token = useSelector((state: RootSate) => state.token);
-  const [updateTransactionRequest, updateTransactionLoading] = useApi(updateTransaction);
+  const categories = useSelector((state: RootSate) => state.categories);
+  const categoriesSorted = useMemo(
+    () => [...categories].sort((a) => (a.id === category.id ? -1 : 0)),
+    [categories, category]
+  );
 
-  const categoriesSorted = [...categories].sort((a, b) => (a.id === category.id ? -1 : 0));
+  const [updateTransactionRequest, updateTransactionLoading] = useApi(updateTransaction);
 
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
     setShowSelect(false);
@@ -51,7 +64,7 @@ export default function TransactionLine({ date, id, description, amount, balance
     updateTransactionRequest(token, accountId, id, { categoryId });
   };
 
-  const handleTextarea = (e: ChangeEvent<HTMLFormElement>) => {
+  const handleTextareaForm = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     setShowTextarea(false);
     const note = refTextarea?.current?.value;
@@ -92,7 +105,7 @@ export default function TransactionLine({ date, id, description, amount, balance
               </p>
             )}
             {showTextarea ? (
-              <form onSubmit={handleTextarea} className="formNote">
+              <form onSubmit={handleTextareaForm} className="formNote">
                 <label className="labelNote">Note: </label>
                 <textarea ref={refTextarea} rows={5} placeholder={note} />
                 <div className="buttonContainer">
