@@ -24,11 +24,12 @@ export default function Header() {
 
   useEffect(() => {
     (() => {
+      if (!dispatch || !getUserProfileRequest || !navigate) return;
       if (!tokenRedux && !tokenLocalSorage) return navigate("/sign-in");
-      if (!tokenRedux && tokenLocalSorage) dispatch(setToken(tokenLocalSorage));
-      getUserProfileRequest(tokenRedux || tokenLocalSorage);
+      if (!tokenRedux && tokenLocalSorage) return dispatch(setToken(tokenLocalSorage));
+      getUserProfileRequest(tokenRedux);
     })();
-  }, []);
+  }, [tokenLocalSorage, tokenRedux, dispatch, getUserProfileRequest, navigate]);
 
   const logout = () => {
     localStorage.removeItem("token");

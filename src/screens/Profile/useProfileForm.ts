@@ -31,9 +31,11 @@ export default function useProfileForm(setDisplayForm: (state: boolean) => void)
   };
 
   useEffect(() => {
-    if (!token) return;
-    getAccountsRequest(token);
-  }, [token]);
+    (() => {
+      if (!token || !getAccountsRequest) return;
+      getAccountsRequest(token);
+    })();
+  }, [token, getAccountsRequest]);
 
   return { updateProfileLoading, handleSubmit, accountsLoading };
 }

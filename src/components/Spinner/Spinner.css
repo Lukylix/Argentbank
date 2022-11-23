@@ -17,7 +17,7 @@
   margin: 10px 0;
 }
 
-.spinner{
+.spinner {
   position: relative;
 }
 
@@ -25,7 +25,7 @@
   animation: 1s linear infinite spinner;
   animation-play-state: inherit;
   border: solid 5px #cfd0d1;
-  border-bottom-color: #12002B;
+  border-bottom-color: #12002b;
   border-radius: 50%;
   content: "";
   height: 40px;

@@ -12,17 +12,20 @@ import { RootSate } from "../../utils/redux/store";
 export default function useAccountLogic() {
   const dispatch = useDispatch();
 
-  const accountLoading = loadAccounts();
-  const transactionsLoading = loadTransactions();
+  const accountLoading = useLoadAccounts();
+  const transactionsLoading = useLoadTransactions();
 
   const [getCategoriesRequest] = useApi(getCategories);
 
-  redirectOnExcedingPageQuerry();
+  useRedirectOnExcedingPageQuerry();
 
   useEffect(() => {
-    dispatch(setTransactions({ transactions: [] }));
-    getCategoriesRequest();
-  }, []);
+    (() => {
+      if (!dispatch || !getCategories) return;
+      dispatch(setTransactions({ transactions: [] }));
+      getCategoriesRequest();
+    })();
+  }, [dispatch, getCategoriesRequest]);
 
   return { accountLoading, transactionsLoading };
 }
@@ -32,7 +35,7 @@ function useQuerryPage() {
   return useMemo(() => parseInt(new URLSearchParams(location.search).get("page") || "1") || 1, [location]);
 }
 
-function loadTransactions() {
+function useLoadTransactions() {
   const { accountId } = useParams();
   const querryPage = useQuerryPage();
   const account = useSelector((state: RootSate) => state.accounts.find((account) => account.id === accountId));
@@ -41,26 +44,30 @@ function loadTransactions() {
   const [getTransactionsRequest, transactionsLoading] = useApi(getTransactions);
 
   useEffect(() => {
-    if (!account?.id || !token) return;
-    getTransactionsRequest(token, account.id, querryPage);
-  }, [account, token, querryPage]);
+    (() => {
+      if (!account?.id || !token || !querryPage || !getTransactionsRequest) return;
+      getTransactionsRequest(token, account.id, querryPage);
+    })();
+  }, [account?.id, token, querryPage, getTransactionsRequest]);
 
   return transactionsLoading;
 }
 
-function loadAccounts(): boolean {
+function useLoadAccounts(): boolean {
   const token = useSelector((state: RootSate) => state.token);
   const [getAccountsRequest, accountLoading] = useApi(getAccounts);
 
   useEffect(() => {
-    if (!token) return;
-    getAccountsRequest(token);
-  }, [token]);
+    (() => {
+      if (!token || !getAccountsRequest) return;
+      getAccountsRequest(token);
+    })();
+  }, [token, getAccountsRequest]);
 
   return accountLoading;
 }
 
-function redirectOnExcedingPageQuerry() {
+function useRedirectOnExcedingPageQuerry() {
   const { accountId } = useParams();
   const baseUrlAccount = useMemo(() => `/account/${accountId}?page=`, [accountId]);
 
@@ -70,7 +77,9 @@ function redirectOnExcedingPageQuerry() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!querryPage || !totalPage) return;
-    if (querryPage > totalPage) navigate(`${baseUrlAccount}${totalPage}`);
-  }, [totalPage, querryPage]);
+    (() => {
+      if (!querryPage || !totalPage || !baseUrlAccount || !navigate) return;
+      if (querryPage > totalPage) navigate(`${baseUrlAccount}${totalPage}`);
+    })();
+  }, [totalPage, querryPage, baseUrlAccount, navigate]);
 }
