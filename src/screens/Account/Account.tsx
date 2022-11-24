@@ -18,7 +18,9 @@ export default function Account() {
           <Spinner />
         ) : (
           <>
-            <h1 className="accountInfo-title">{`Argent Bank ${account?.type} (x${account?.transactions})`}</h1>
+            <h1 className="accountInfo-title">{`Argent Bank ${account?.type || ""} (x${
+              account?.transactions || ""
+            })`}</h1>
             <p>
               <span className="accountInfo-Amount">${formatAmount(account?.amount)}</span>
               <br />

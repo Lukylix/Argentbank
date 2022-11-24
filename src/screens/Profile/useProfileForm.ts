@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { setAlert } from "../../utils/alert";
+import { addAlert } from "../../utils/redux/alertSlice";
 import useApi from "../../hooks/useApi";
 import { updateUserProfile, getAccounts } from "../../utils/api";
 
@@ -23,7 +23,7 @@ export default function useProfileForm(setDisplayForm: (state: boolean) => void)
     const { firstName: formFirstName, lastName: formLastName } = formData;
     (async () => {
       if (!formFirstName && !formLastName)
-        return dispatch(setAlert("Please fill at least one field.", "warning") as any);
+        return dispatch(addAlert({ message: "Please fill at least one field.", type: "warning" }));
       const { error } = await updateUserProfileRequest(token, formFirstName || firstName, formLastName || lastName);
       if (error) return;
       setDisplayForm(false);

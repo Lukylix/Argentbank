@@ -39,9 +39,9 @@
   },
   "lint-staged": {
     "*": "prettier --write",
-    "*.ts|*.tsx|*.js|*.jsx": [
-      "eslint",
-      "tsc --noEmit"
+    "*.{ts,tsx,js,jsx}": [
+      "eslint -c .eslintrc",
+      "bash -c 'yarn run types'"
     ]
   },
   "devDependencies": {

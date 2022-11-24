@@ -1,11 +1,11 @@
 import apiEndpoints from "./apiEndpoints";
-import { setAlert } from "../alert";
 
 import { setToken } from "../redux/tokenSlice";
 import { setUser, setUserNames } from "../redux/userSlice";
 import { setAccounts } from "../redux/accountsSlice";
 import { setTransactions, updateTransaction as actionUpdateTransaction } from "../redux/transactionsSlice";
 import { setCategories } from "../redux/categoriesSlice";
+import { addAlert } from "../redux/alertSlice";
 
 import { AppDispatch } from "../redux/store";
 import { NavigateFunction } from "react-router-dom";
@@ -18,12 +18,12 @@ const classicErrorHandler = (
   logout: () => void
 ) => {
   if (error?.status === 401) {
-    dispatch(setAlert("Session expired.", "warning"));
+    dispatch(addAlert({ message: "Session expired.", type: "warning" }));
     logout();
     return;
   }
-  if (error?.status === 500) return dispatch(setAlert("Internal server error.", "danger"));
-  dispatch(setAlert(formatErrorMessage(error.message), "warning"));
+  if (error?.status === 500) return dispatch(addAlert({ message: "Internal server error.", type: "danger" }));
+  dispatch(addAlert({ message: formatErrorMessage(error.message), type: "warning" }));
 };
 
 const login =

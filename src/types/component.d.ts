@@ -5,10 +5,6 @@ interface IAccountLineProps {
   transactions: number;
 }
 
-interface IAlertProps {
-  alert: IAlert;
-}
-
 interface IFeatureItemProps {
   icon: string;
   alt: string;

@@ -25,9 +25,9 @@ export default function useLoginForm() {
     const formData = Object.fromEntries(new FormData(event.target).entries());
     const { username: email, password, rememberMe } = formData;
 
-    const { error } = await loginRequest(email, password);
+    const { error } = await loginRequest(email.toString().trim(), password);
     if (error) return;
-    if (rememberMe && email) localStorage.setItem("email", email.toString());
+    if (rememberMe && email) localStorage.setItem("email", email.toString().trim());
     if (!rememberMe) localStorage.removeItem("email");
   };
 
