@@ -6,11 +6,11 @@ import { AccountLine, Spinner } from "../../components";
 import "./Profile.css";
 
 import { RootSate } from "../../utils/redux/store";
-import useProfileForm from "./useProfileForm";
+import useProfileLogic from "./useProfileLogic";
 
 export default function UserProfile() {
   const [displayForm, setDisplayForm] = useState(false);
-  const { accountsLoading, updateProfileLoading, handleSubmit } = useProfileForm(setDisplayForm);
+  const { accountsLoading, updateProfileLoading, handleSubmit } = useProfileLogic(setDisplayForm);
 
   const { firstName, lastName } = useSelector((state: RootSate) => state.user);
   const accounts = useSelector((state: RootSate) => state.accounts);

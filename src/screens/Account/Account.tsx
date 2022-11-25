@@ -1,14 +1,14 @@
-import useAccountLogic from "./useAccountLogic";
-import useAccountData from "./useAccountData";
+import useAccountLogic from "./hooks/useAccountLogic";
+import useAccountData from "./hooks/useAccountData";
 
-import formatAmount from "../../utils/formatAmount";
+import addCommaEvery3Digits from "../../utils/formatAmount";
 
 import { TransactionLine, Pagination, Spinner } from "../../components";
 
 import "./Account.css";
 
 export default function Account() {
-  const { accountLoading, transactionsLoading } = useAccountLogic();
+  const { accountLoading, transactionsLoading, categoriesLoading } = useAccountLogic();
   const { account, transactions, page, totalPage } = useAccountData();
 
   return (
@@ -22,7 +22,7 @@ export default function Account() {
               account?.transactions || ""
             })`}</h1>
             <p>
-              <span className="accountInfo-Amount">${formatAmount(account?.amount)}</span>
+              <span className="accountInfo-Amount">${addCommaEvery3Digits(account?.amount)}</span>
               <br />
               <span className="accountInfo-Description">
                 {account?.type === "Credit Card" ? "Current Balance" : "Available Balance"}
@@ -31,7 +31,7 @@ export default function Account() {
           </>
         )}
       </header>
-      {transactionsLoading ? (
+      {transactionsLoading || categoriesLoading ? (
         <Spinner />
       ) : (
         <section id="transactions">

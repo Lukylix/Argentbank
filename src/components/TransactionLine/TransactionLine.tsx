@@ -1,16 +1,15 @@
-import { useState, useRef, ChangeEvent, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useMemo } from "react";
+
 import { useSelector } from "react-redux";
 
-import useApi from "../../hooks/useApi";
-import { updateTransaction } from "../../utils/api";
 import { RootSate } from "../../utils/redux/store";
 
-import formatAmount from "../../utils/formatAmount";
+import addCommaEvery3Digits from "../../utils/formatAmount";
 
 import Spinner from "../Spinner";
 
 import "./TransactionLine.css";
+import useTransactionLineLogic from "./useTransactionLineLogic";
 
 const formatDate = (date: string) => {
   const monthNames = [
@@ -47,29 +46,17 @@ export default function TransactionLine({
   const [showSelect, setShowSelect] = useState(false);
   const [showTextarea, setShowTextarea] = useState(false);
 
-  const refTextarea = useRef<HTMLTextAreaElement>(null);
-  const { accountId } = useParams();
-  const token = useSelector((state: RootSate) => state.token);
+  const { handleSelect, handleNoteForm, updateCategoryLoading, updateNoteLoading } = useTransactionLineLogic({
+    setShowSelect,
+    setShowTextarea,
+    transactionId: id,
+  });
+
   const categories = useSelector((state: RootSate) => state.categories);
   const categoriesSorted = useMemo(
     () => [...categories].sort((a) => (a.id === category.id ? -1 : 0)),
     [categories, category]
   );
-
-  const [updateTransactionRequest, updateTransactionLoading] = useApi(updateTransaction);
-
-  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    setShowSelect(false);
-    const categoryId = e.target.value;
-    updateTransactionRequest(token, accountId, id, { categoryId });
-  };
-
-  const handleTextareaForm = (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setShowTextarea(false);
-    const note = refTextarea?.current?.value;
-    updateTransactionRequest(token, accountId, id, { note });
-  };
 
   return (
     <details className="transaction">
@@ -77,50 +64,48 @@ export default function TransactionLine({
         <i className="fa fa-chevron-down" />
         <span>{formatDate(date)}</span>
         <span>{description}</span>
-        <span style={{ color: amount > 0 ? "#5BA095" : "inherit" }}>{`${amount > 0 ? "+" : "-"}$${formatAmount(
+        <span style={{ color: amount > 0 ? "#5BA095" : "inherit" }}>{`${amount > 0 ? "+" : "-"}$${addCommaEvery3Digits(
           Math.abs(amount)
         )}`}</span>
-        <span>{`${balance > 0 ? "+" : "-"}$${formatAmount(Math.abs(balance))}`}</span>
+        <span>{`${balance > 0 ? "+" : "-"}$${addCommaEvery3Digits(Math.abs(balance))}`}</span>
       </summary>
       <div className="transaction-detail">
         <p>Transaction Type: {type}</p>
-        {updateTransactionLoading ? (
+        {updateCategoryLoading ? (
           <Spinner />
+        ) : showSelect ? (
+          <p>
+            Category:{" "}
+            <select onChange={handleSelect} onBlur={() => setShowSelect(false)}>
+              {categoriesSorted.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </p>
         ) : (
-          <>
-            {showSelect ? (
-              <p>
-                Category:{" "}
-                <select onChange={handleSelect} onBlur={() => setShowSelect(false)}>
-                  {categoriesSorted.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </p>
-            ) : (
-              <p>
-                Category: {category.name} <i onClick={() => setShowSelect(true)} className="fa fa-pencil" />
-              </p>
-            )}
-            {showTextarea ? (
-              <form onSubmit={handleTextareaForm} className="formNote">
-                <label className="labelNote">Note: </label>
-                <textarea ref={refTextarea} rows={5} placeholder={note} />
-                <div className="buttonContainer">
-                  <button>Save</button>
-                  <button type="button" className="cancel" onClick={() => setShowTextarea(false)}>
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <p>
-                Note: {note} <i onClick={() => setShowTextarea(true)} className="fa fa-pencil" />
-              </p>
-            )}
-          </>
+          <p>
+            Category: {category.name} <i onClick={() => setShowSelect(true)} className="fa fa-pencil" />
+          </p>
+        )}
+        {updateNoteLoading ? (
+          <Spinner />
+        ) : showTextarea ? (
+          <form onSubmit={handleNoteForm} className="formNote">
+            <label className="labelNote">Note: </label>
+            <textarea id="note" name="note" rows={5} placeholder={note} />
+            <div className="buttonContainer">
+              <button>Save</button>
+              <button type="button" className="cancel" onClick={() => setShowTextarea(false)}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        ) : (
+          <p>
+            Note: {note} <i onClick={() => setShowTextarea(true)} className="fa fa-pencil" />
+          </p>
         )}
       </div>
     </details>

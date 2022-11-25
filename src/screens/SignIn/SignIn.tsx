@@ -1,11 +1,11 @@
-import useLoginForm from "./useLoginForm";
+import useLoginLogic from "./useLoginLogic";
 
 import { Spinner } from "../../components";
 
 import "./SignIn.css";
 
 export default function SignIn() {
-  const { handleSubmit, emailRef, loginLoading } = useLoginForm();
+  const { emailRef, handleSubmit, loginLoading } = useLoginLogic();
   return (
     <main className="main bg-dark">
       <section className="sign-in-content">

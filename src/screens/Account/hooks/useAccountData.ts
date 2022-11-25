@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { RootSate } from "../../utils/redux/store";
+import { RootSate } from "../../../utils/redux/store";
 
 export default function useAccountData() {
   const { accountId } = useParams();
