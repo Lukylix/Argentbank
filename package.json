@@ -40,8 +40,7 @@
   "lint-staged": {
     "*": "prettier --write",
     "*.{ts,tsx,js,jsx}": [
-      "eslint -c .eslintrc",
-      "bash -c 'yarn run types'"
+      "eslint -c .eslintrc"
     ]
   },
   "devDependencies": {
