@@ -49,7 +49,7 @@ export default function Account() {
               amount={transaction.amount}
               description={transaction.description}
               type={transaction.type}
-              category={transaction.categoryId}
+              category={transaction.category}
               note={transaction.note}
               balance={transaction.balance}
             />

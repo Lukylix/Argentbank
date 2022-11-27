@@ -32,15 +32,11 @@ const login = async (email: string, password: string): Promise<AxiosResponse<IAp
   });
 
 const getUserProfile = async (token: string): Promise<AxiosResponse<IApiResponse<IUserProfile>>> =>
-  await client.post(
-    `/user/profile`,
-    {},
-    {
-      headers: {
-        authorization: "Bearer " + token,
-      },
-    }
-  );
+  await client.get(`/user/profile`, {
+    headers: {
+      authorization: "Bearer " + token,
+    },
+  });
 
 const updateUserProfile = async (
   token: string,

@@ -84,7 +84,7 @@ const getTransactions =
   };
 
 const updateTransaction =
-  (token: string, accountId: string, transationId: string, update: { categoryId?: string; note: string }) =>
+  (token: string, accountId: string, transationId: string, update: { categoryId?: string; note?: string }) =>
   async (dispatch: AppDispatch, navigate: NavigateFunction, logout: () => void) => {
     const { data, error } = await apiEndpoints.updateTransaction(token, accountId, transationId, update);
     (() => {

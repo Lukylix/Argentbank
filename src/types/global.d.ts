@@ -26,7 +26,7 @@ interface ITransaction {
   note: string;
   accountId: string;
   userId: string;
-  categoryId: ICategory;
+  category: ICategory;
   amount: number;
   balance: number;
   type: string;
