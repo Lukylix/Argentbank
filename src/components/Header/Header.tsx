@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { setUser } from "../../utils/redux/userSlice";
@@ -15,7 +15,6 @@ import { RootSate } from "../../utils/redux/store";
 export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation();
 
   const tokenRedux = useSelector((state: RootSate) => state.token);
   const firstName = useSelector((state: RootSate) => state.user?.firstName);
@@ -33,14 +32,11 @@ export default function Header() {
   useEffect(() => {
     (() => {
       if (!dispatch || !getUserProfileRequest || !navigate || !location.pathname) return;
-      if (!tokenRedux && !tokenLocalSorage) {
-        if (location.pathname !== "/") return navigate("/sign-in");
-        return;
-      }
+      if (!tokenRedux && !tokenLocalSorage) return;
       if (!tokenRedux && tokenLocalSorage) return dispatch(setToken(tokenLocalSorage));
       getUserProfileRequest(tokenRedux);
     })();
-  }, [tokenLocalSorage, tokenRedux, dispatch, getUserProfileRequest, navigate, location.pathname]);
+  }, [tokenLocalSorage, tokenRedux, dispatch, getUserProfileRequest, navigate]);
 
   return (
     <nav className="main-nav">
