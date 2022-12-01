@@ -31,7 +31,7 @@ export default function Header() {
 
   useEffect(() => {
     (() => {
-      if (!dispatch || !getUserProfileRequest || !navigate || !location.pathname) return;
+      if (!dispatch || !getUserProfileRequest || !navigate) return;
       if (!tokenRedux && !tokenLocalSorage) return;
       if (!tokenRedux && tokenLocalSorage) return dispatch(setToken(tokenLocalSorage));
       getUserProfileRequest(tokenRedux);
