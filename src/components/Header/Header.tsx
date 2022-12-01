@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { setUser } from "../../utils/redux/userSlice";
@@ -15,6 +15,7 @@ import { RootSate } from "../../utils/redux/store";
 export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const tokenRedux = useSelector((state: RootSate) => state.token);
   const firstName = useSelector((state: RootSate) => state.user?.firstName);
@@ -22,21 +23,24 @@ export default function Header() {
   const tokenLocalSorage = localStorage.getItem("token");
   const [getUserProfileRequest] = useApi(getUserProfile);
 
-  useEffect(() => {
-    (() => {
-      if (!dispatch || !getUserProfileRequest || !navigate) return;
-      if (!tokenRedux && !tokenLocalSorage) return navigate("/sign-in");
-      if (!tokenRedux && tokenLocalSorage) return dispatch(setToken(tokenLocalSorage));
-      getUserProfileRequest(tokenRedux);
-    })();
-  }, [tokenLocalSorage, tokenRedux, dispatch, getUserProfileRequest, navigate]);
-
   const logout = () => {
     localStorage.removeItem("token");
     dispatch(setToken(null));
     dispatch(setUser({}));
     navigate("/");
   };
+
+  useEffect(() => {
+    (() => {
+      if (!dispatch || !getUserProfileRequest || !navigate || !location.pathname) return;
+      if (!tokenRedux && !tokenLocalSorage) {
+        if (location.pathname !== "/") return navigate("/sign-in");
+        return;
+      }
+      if (!tokenRedux && tokenLocalSorage) return dispatch(setToken(tokenLocalSorage));
+      getUserProfileRequest(tokenRedux);
+    })();
+  }, [tokenLocalSorage, tokenRedux, dispatch, getUserProfileRequest, navigate, location.pathname]);
 
   return (
     <nav className="main-nav">
