@@ -1,7 +1,8 @@
 FROM node:19-alpine
 WORKDIR /app
 ENV PATH="./node_modules/.bin:$PATH"
-#ENV VITE_APP_API_BASEURL="https://api.argentbank.iloa.dev"
+ARG baseUrl="http://localhost:3000"
+ENV VITE_APP_API_BASEURL $baseUrl
 COPY package.json .
 RUN npm install
 COPY . .
