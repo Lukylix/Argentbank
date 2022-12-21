@@ -5,7 +5,7 @@ import { Spinner } from "../../components";
 import "./SignIn.css";
 
 export default function SignIn() {
-  const { emailRef, handleSubmit, loginLoading } = useLoginLogic();
+  const { emailRef, handleSubmit, loginLoading, loginRequest } = useLoginLogic();
   return (
     <main className="main bg-dark">
       <section className="sign-in-content">
@@ -24,7 +24,16 @@ export default function SignIn() {
             <input type="checkbox" id="rememberMe" name="rememberMe" defaultChecked />
             <label htmlFor="rememberMe">Remember me</label>
           </div>
-          {loginLoading ? <Spinner /> : <button className="sign-in-button">Sign In</button>}
+          {loginLoading ? (
+            <Spinner />
+          ) : (
+            <>
+              <button className="sign-in-button">Sign In</button>
+              <button className="sign-in-button" onClick={() => loginRequest("tony@stark.com", "password123")}>
+                Demo
+              </button>
+            </>
+          )}
         </form>
       </section>
     </main>

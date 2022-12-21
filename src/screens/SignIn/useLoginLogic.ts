@@ -7,10 +7,10 @@ import { login } from "../../utils/api";
 export default function useLoginLogic() {
   const emailRef = useRef<HTMLInputElement>(null);
   useFillRememberedEmail(emailRef);
-  const { handleSubmit, loginLoading } = useLoginForm();
+  const { handleSubmit, loginLoading, loginRequest } = useLoginForm();
   useRedirectOnLogin();
 
-  return { emailRef, handleSubmit, loginLoading };
+  return { emailRef, handleSubmit, loginLoading, loginRequest };
 }
 
 function useFillRememberedEmail(emailRef: RefObject<HTMLInputElement>) {
@@ -44,5 +44,6 @@ function useLoginForm() {
     },
     [loginRequest]
   );
-  return { handleSubmit, loginLoading };
+
+  return { handleSubmit, loginLoading, loginRequest };
 }

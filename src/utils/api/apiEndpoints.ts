@@ -1,10 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 
-const host = import.meta.env.VITE_APP_API_HOST || "localhost";
-const port = import.meta.env.VITE_APP_API_PORT || 3001;
+const baseUrl = import.meta.env.VITE_APP_API_BASEURL || "http://localhost:3000";
 
 const client = axios.create({
-  baseURL: `http://${host}:${port}/api/v1`,
+  baseURL: `${baseUrl}/api/v1`,
 });
 
 const createApiCall =
