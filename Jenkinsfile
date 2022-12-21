@@ -1,14 +1,11 @@
 def app
 pipeline {
   agent any
-  environment {
-    VITE_APP_API_BASEURL = "https://api.argentbank.iloa.dev"
-  }
   stages {
     stage("Build") {
       steps {
         script {
-          app = docker.build("argentbank", "--build-arg baseUrl=${env.VITE_APP_API_BASEURL} .")
+          app = docker.build("argentbank", "--build-arg baseUrl=https://api.argentbank.iloa.dev .")
         }
       }
     }
