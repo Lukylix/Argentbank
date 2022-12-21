@@ -8,7 +8,7 @@ pipeline {
     stage("Build") {
       steps {
         script {
-          app = docker.build("argentbank", "--build-arg baseUrl=${env.VITE_APP_API_BASEURL}", ".")
+          app = docker.build("argentbank", "--build-arg baseUrl=${env.VITE_APP_API_BASEURL} .")
         }
       }
     }
